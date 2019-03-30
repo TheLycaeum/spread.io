@@ -4,88 +4,89 @@ from tkinter import messagebox
 from tkinter import scrolledtext
 
 
-def list_of_platforms(plugin_names):
-    number_of_plugins = len(plugin_names)
-    for number, name in enumerate(plugin_names, 1):
-        res = number, name
-    return res
+plugins = ["Facebook","Twitter"]
+n = len(plugins)
 
 
-
-window = Tk()
-window.geometry('550x350+50+50')
-window.title("SPREAD")
-
-#FACEBOOK
-var1 = IntVar()
-Checkbutton(window, text="Facebook", variable=var1).grid(row=0, sticky=W)
-
-fb = Label(window, text="Email address: ", width=15)
-fb.grid(column=0, row=1)
-
-facebook_u = Entry(window, width=25)
-facebook_u.grid(column=1, row=1)
-
-fb1 = Label(window, text="Password: ", width=15)
-fb1.grid(column=0, row=2)
-
-facebook_p = Entry(window, width=25)
-facebook_p.grid(column=1, row=2)
-
-#btn1 = Button(window, text="Login", width=5)
-#btn1.grid(column=50, row=0)
-
-facebook_l = Button(window, text="Login", width=5)
-facebook_l.grid(column=3, row=3)
-
-#TWITTER
-var1 = IntVar()
-Checkbutton(window,text="Twitter",variable=var1).grid(row=3,sticky=W)
-
-twt =Label(window, text="Email address:", width=15)
-twt.grid(column=0, row=4)
-
-twt_u = Entry(window, width=25)
-twt_u.grid(column=1, row=4)
-
-twt1 = Label(window, text="Password:", width=15)
-twt1.grid(column=0, row=5)
-
-twt_p = Entry(window, width=25)
-twt_p.grid(column=1, row=5)
-
-twt_l = Button(window, text="Login", width=5)
-twt_l.grid(column=3, row=6)
+def button(window):
+    row = 0
+    for names in plugins:
+        var = IntVar()
+        c = Checkbutton(window, text=names, variable=var, width=40)
+        c.grid(column=2, row=row, sticky=W)
+        row += 7
 
 
-#txt1 = scrolledtext.ScrolledText(window,width=40,height=10).grid(column=2,row = 7)
-#chk_state = BooleanVar()
-#chk_state.set(True)
-
-#var1 = IntVar()
-#Checkbutton(window,text="Facebook",variable=var1).grid(row=0,sticky=W)
-#txt = Entry(window,width=50)
-#txt.grid(column=2,row=0)
-
-#var2 = IntVar()
-#Checkbutton(window, text="Twitter", variable=var2).grid(row=1, sticky=W)
-#txt1 = Entry(window, width=50)
-#btn2 = Button(window, text="Login")
-#btn2.grid(column=5, row=1)
-#txt1.grid(column=2, row=1)
-
-#button = tk.Button(master=frame, text='press', command=list_of_platforms)
-#chk.grid(column=0, row=0)
-
-message = Label(window, text="Message box")
-message.grid(column=0, row=90)
-xt = scrolledtext.ScrolledText(window, width=40, height=10)
-xt.grid(column=1, row=100)
+def user_id(window):
+    row = 1
+    for i in range(n):
+        lbl = Label(window, text="Email Address:", width=15)
+        lbl.grid_rowconfigure(0, row=row)
+        row += 5
 
 
+def passwd(window):
+    row = 2
+    for i in range(n):
+        lbl1 = Label(window, text="Password", width=50)
+        lbl1.grid(column=0, row=row)
+        row += 6
+
+
+#def entry_text(window):
+ #   row = 1
+  #  for i in range(n):
+   #     ent = Entry(window, width=25)
+    #    ent.grid(column=1, row=row)
+     #   row += 5
+
+#def entry_text1(window):
+ #   row = 2
+  #  for i in range(n):
+   #     ent = Entry(window, width=25)
+    #    ent.grid(column=1, row=row)
+     #   row += 5
+
+#def l_button(window):
+ #   row = 3
+  #  for i in range(n):
+   #     lb = Button(window, text="Login", width=5)
+    #    lb.grid(column=3, row=row)
+     #   row += 4
+
+def message_box(window):
+    message = Label(window, text="Message box", width=40)
+    message.grid(column=2, row=90)
+    xt = scrolledtext.ScrolledText(window, width=40, height=10)
+    xt.grid(column=2, row=200)
+
+def send_message(window, message_box):
+    value = event.widget.get("1.0", "end-1c")
+    print("CONTENT:") + value
 def clicked():
     messagebox.showinfo('Message title', 'Message sent!!')
 
-btn = Button(window, text="SEND", command=clicked)
-btn.grid(column=3, row=300)
-window.mainloop()
+def send_button(window,clicked):
+    btn = Button(window, text="SEND", command=clicked)
+    btn.grid(column=2, row=300)
+
+
+def main():
+    window = Tk()
+    window.title("SPREAD")
+    window.geometry("500x500+450+100")
+    #width, height = window.winfo_screenwidth(), window.winfo_screenheight()
+    #window.geometry('%dx%d+0+0' % (width,height))
+    #window.geometry("1080x800")
+    button(window)
+    #user_id(window)
+    #passwd(window)
+    #entry_text(window)
+    #l_button(window)
+    message_box(window)
+    send_message(window, message_box)
+    send_button(window,clicked)
+    mainloop()
+
+if __name__ == '__main__':
+    main()
