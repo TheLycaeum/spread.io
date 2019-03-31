@@ -6,45 +6,70 @@ from platform import Platform
 class Twitter(Platform):
     "Platform for twitter"
 
-    def load_app_apikey(self, file_name):
+    def __init__(self, app_file, user_file):
+        self.app_file = app_file
+        self.user_file = user_file
+
+        self.load_app_apikey()
+
+        # self.keys = [1,2]
+        # self.keys[0], self.keys[1] = self.read_config(self.user_file)
+        # self.post()
+
+    def load_app_apikey(self):
         "Loads app api key"
-        self.read_config(file_name)
-        if self.consumer_key == "XXXXX" or self.consumer_secret == 'XXXXX':
+        consumer_key, consumer_secret = self.read_config(self.app_file)
+        if consumer_key == "XXXXX" or consumer_secret == 'XXXXX':
             raise Exception("You haven't configured the API key. Please read Readme")
         else:
-            self.access = tweepy.OAuthHandler(self.consumer_key,
-                                              self.consumer_secret)
+            self.access = tweepy.OAuthHandler(consumer_key,
+                                              consumer_secret)
 
     def read_config(self, filename):
         "Reads config file and store apikey values"
         with open(filename) as file:
             lines = file.read()
             item = lines.split('\n')
-            self.consumer_key = item[0].split('=')[1].strip()
-            self.consumer_secret = item[1].split('=')[1].strip()
+            key = item[0].split('=')[1].strip()
+            secret =  item[1].split('=')[1].strip()
+            return key, secret
+
 
     def log_in(self):
-        """open the url on browser"""
+        "Open the twitter in browser to authorize the app"
         url = self.access.get_authorization_url()
         webbrowser.open(url)
         time.sleep(1)
-        self.get_key_and_secret()
+        self.get_user_keys()
+        self.write_user_keys(self.user_file)
 
-    def get_key_and_secret(self):
-        "ask user to verify the PIN generated in broswer"
+    def get_user_keys(self):
+        "Ask user to verify the PIN generated in browser"
         verifier = input('PIN: ').strip()
-        touple_of_keys = self.access.get_access_token(verifier)
-        list_of_keys = list(touple_of_keys)
-        return list_of_keys
+        self.keys = list(self.access.get_access_token(verifier))
 
-    def post(self, list_of_keys):
+    def write_user_keys(self, user_file):
+        string = " Key = {} \n Secret = {}".format(str(self.keys[0]),
+                                                   str(self.keys[1]))
+        with open(user_file, 'w') as file:
+            file.write(string)
+
+
+    def post(self):
         "post tweet using api"
-        key = list_of_keys[0]
-        secret = list_of_keys[1]
-        self.access.set_access_token(key, secret)
+        self.access.set_access_token(self.keys[0],
+                                     self.keys[1])
         api = tweepy.API(self.access)
         username = api.me().name
         print("Welcome ", username)
         time.sleep(.5)
         tweet = input("Tweet here: ")
         api.update_status(tweet)
+
+
+def main():
+    pluggin = Twitter(".config_twitter_app",".config_twitter_user")
+    # pluggin.log_in()
+
+if __name__ == '__main__':
+    main()
