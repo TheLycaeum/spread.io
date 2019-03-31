@@ -4,6 +4,9 @@ from rauth import OAuth2Service
 import rauth
 import requests
 
+def open_browser(url):
+    '''Opens the authorize_url in web-browser'''
+    webbrowser.open(url)
 
 def get_url(params):
     '''Creates a authorize url for logining in facebook''' 
@@ -23,7 +26,7 @@ def main():
               'response_type': 'token',
               'redirect_uri': redirect_uri}
     url=get_url(params)
-    
+    open_browser(url)
     
 if __name__=="__main__":
     facebook = OAuth2Service(name='spread',
