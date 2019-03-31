@@ -1,92 +1,61 @@
-from tkinter import *
-from tkinter.ttk import *
-from tkinter import messagebox
-from tkinter import scrolledtext
+import sys
+import tkinter as tk
+from tkinter import scrolledtext as st
 
 
-plugins = ["Facebook","Twitter"]
+plugins = ["Facebook","Twitter", "Instagram","Google +"]
 n = len(plugins)
 
 
-def button(window):
-    row = 0
-    for names in plugins:
-        var = IntVar()
-        c = Checkbutton(window, text=names, variable=var, width=40)
-        c.grid(column=2, row=row, sticky=W)
-        row += 7
+class Display():
+    """Create a Display class for the app,setup window, title and geometry"""
+    def __init__(self, window):
+        self.window = window
+        self.window.title("SPREAD")
+        self.window.geometry("500x500")
+    def screen(self):
+        """setup mainloop"""    
+        self.window.mainloop()
 
+    def button(self):
+        """Send button and checkbutton created in this function"""
+        if len(self.window.text_frame.index("end")) == 0:
+            btn = tk.Button(self.window, text="SEND", state='disabled')
+            btn.grid(row=300, column=2)
+        btn = tk.Button(self.window, text="SEND", state='normal', command=self.send)
+        btn.grid(row=300, column=2)
+            #btn['state'] = 'normal'
+        row = 0
+        for names in plugins:
+            var = tk.IntVar()
+            plat = tk.Checkbutton(self.window, text=names, variable=var, width=40)
+            plat.grid(row=row, column=2)
+            row += 8
 
-def user_id(window):
-    row = 1
-    for i in range(n):
-        lbl = Label(window, text="Email Address:", width=15)
-        lbl.grid_rowconfigure(0, row=row)
-        row += 5
+    def message_box(self):
+        """To print message box"""
+        message = tk.Label(self.window, text="Message box", width=40)
+        message.grid(column=2, row=90)
 
-
-def passwd(window):
-    row = 2
-    for i in range(n):
-        lbl1 = Label(window, text="Password", width=50)
-        lbl1.grid(column=0, row=row)
-        row += 6
-
-
-#def entry_text(window):
- #   row = 1
-  #  for i in range(n):
-   #     ent = Entry(window, width=25)
-    #    ent.grid(column=1, row=row)
-     #   row += 5
-
-#def entry_text1(window):
- #   row = 2
-  #  for i in range(n):
-   #     ent = Entry(window, width=25)
-    #    ent.grid(column=1, row=row)
-     #   row += 5
-
-#def l_button(window):
- #   row = 3
-  #  for i in range(n):
-   #     lb = Button(window, text="Login", width=5)
-    #    lb.grid(column=3, row=row)
-     #   row += 4
-
-def message_box(window):
-    message = Label(window, text="Message box", width=40)
-    message.grid(column=2, row=90)
-    xt = scrolledtext.ScrolledText(window, width=40, height=10)
-    xt.grid(column=2, row=200)
-
-def send_message(window, message_box):
-    value = event.widget.get("1.0", "end-1c")
-    print("CONTENT:") + value
-def clicked():
-    messagebox.showinfo('Message title', 'Message sent!!')
-
-def send_button(window,clicked):
-    btn = Button(window, text="SEND", command=clicked)
-    btn.grid(column=2, row=300)
+    def scrolled_text(self):
+        """Now let's create scrolled text to type message"""
+        self.window.text_frame = st.ScrolledText(self.window, width=40, height=10)
+        self.window.text_frame.grid(column=2, row=200)
+            
+    def send(self):
+        """send function used to return the inside content of scrolltext"""
+        send_text = self.window.text_frame.get('1.0', tk.END)
+        print(send_text)
 
 
 def main():
-    window = Tk()
-    window.title("SPREAD")
-    window.geometry("500x500+450+100")
-    #width, height = window.winfo_screenwidth(), window.winfo_screenheight()
-    #window.geometry('%dx%d+0+0' % (width,height))
-    #window.geometry("1080x800")
-    button(window)
-    #user_id(window)
-    #passwd(window)
-    #entry_text(window)
-    #l_button(window)
-    message_box(window)
-    send_message(window, message_box)
-    send_button(window,clicked)
-    mainloop()
+    window= tk.Tk()
+    app = Display(window)
+    app.button()
+    app.message_box()
+    app.scrolled_text()
+    app.screen()
+
 
 if __name__ == '__main__':
     main()
