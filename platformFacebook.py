@@ -22,6 +22,19 @@ def input_url_with_token():
     access_token=access_to[0]
     return access_token
 
+def get_api(cfg):
+    '''gets the api object from GraphAPI'''
+    page_access_token=None
+    graph=f.GraphAPI(cfg['access_token'])
+    response=graph.get_object('me/accounts')
+    # fetching data attribute of response object
+    for page in response['data']:
+	#finding our page
+        if page['id']==cfg['page_id']:
+            page_access_token=page['access_token']
+            graph=f.GraphAPI(page_access_token)
+    return graph
+
 def main():
     cfg={
         'page_id':'427579681383478',
@@ -37,6 +50,8 @@ def main():
     url=get_url(params)
     open_browser(url)
     access_token=input_url_with_token()
+    cfg['access_token']=access_token
+    
     
 if __name__=="__main__":
     facebook = OAuth2Service(name='spread',
