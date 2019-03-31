@@ -13,6 +13,10 @@ class Display():
         self.window = window
         self.window.title("SPREAD.IO")
         self.window.geometry("500x500")
+        self.show_platforms(plugins)
+        self.message_box()
+        self.send_button()
+        self.show_screen()
 
     def show_screen(self):
         """Open's the SPREAD.IO window"""
@@ -20,8 +24,6 @@ class Display():
 
     def show_platforms(self, plugins):
         """Show's the available platforms"""
-        btn = tk.Button(self.window, text="SEND", state='normal', command=self.send)
-        btn.grid(row=300, column=2)
         row = 0
         for names in plugins:
             var = tk.IntVar()
@@ -37,25 +39,25 @@ class Display():
 
     def scrolled_text(self):
         """Now let's create scrolled text to type message/content"""
-        self.window.text_frame = st.ScrolledText(self.window, width=40, height=10)
-        self.window.text_frame.grid(column=2, row=200)
-            
-    def send(self):
-        """send the message/content inside message_box"""
-        send_text = self.window.text_frame.get('1.0', tk.END)
-        if len(self.window.text_frame.get('1.0', tk.END)) == 1:
+        self.text_frame = st.ScrolledText(self.window, width=40, height=10)
+        self.text_frame.grid(column=2, row=200)
+
+    def send_button(self):
+        """Button for sending conent"""
+        button = tk.Button(self.window, text="SEND", state='normal', command=self.send_to)
+        button.grid(row=300, column=2)
+
+    def send_to(self):
+        """send the message/content inside message_box and checks scrolledtext is empty or not"""
+        send_text = self.text_frame.get('1.0', tk.END)
+        if len(send_text) == 1:
             mb.showinfo("Warning!!!", "Box is empty!")
         print(send_text)
-            
 
 
 def main():
     window= tk.Tk()
-    app = Display(window)
-    app.show_platforms(plugins)
-    app.message_box()
-    app.scrolled_text()
-    app.show_screen()
+    Display(window)
 
 
 if __name__ == '__main__':
