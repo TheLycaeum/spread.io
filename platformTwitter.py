@@ -6,11 +6,22 @@ from platform import Platform
 class Twitter(Platform):
     "Platform for twitter"
 
-    def load_app_apikey(self):
+    def load_app_apikey(self, file_name):
         "Loads app api key"
-        consumer_key = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-        consumer_secret = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-        self.access = tweepy.OAuthHandler(consumer_key, consumer_secret)
+        self.read_config(file_name)
+        if self.consumer_key == "XXXXX" or self.consumer_secret == 'XXXXX':
+            raise Exception("You haven't configured the API key. Please read Readme")
+        else:
+            self.access = tweepy.OAuthHandler(self.consumer_key,
+                                              self.consumer_secret)
+
+    def read_config(self, filename):
+        "Reads config file and store apikey values"
+        with open(filename) as file:
+            lines = file.read()
+            item = lines.split('\n')
+            self.consumer_key = item[0].split('=')[1].strip()
+            self.consumer_secret = item[1].split('=')[1].strip()
 
     def log_in(self):
         """open the url on browser"""
