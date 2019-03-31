@@ -41,6 +41,22 @@ def extend_token(cfg, client_id, client_secret):
     extended_token = appi.extend_access_token(client_id, client_secret)
     return (extended_token['access_token'])
 
+def post_message(cfg):
+    '''Post a message in facebook page'''
+    api=get_api(cfg)
+    #print(dir(api))
+    page_id=cfg['page_id']
+    msg='Testing thru Oauth.!!!'
+    
+    #obj_call for posting text
+    api.put_object("me", "feed", message=msg)
+    
+    #obj_call for posting image
+    #api.put_photo(image=open('test.jpg', 'rb'), message='Test for uploading photo next is dp')
+    #obj_call for posting dp
+    #api.put_photo(image=open("jpeg_43.jpg", 'rb'), album_path=page_id + "/picture")  
+    
+
 def main():
     cfg={
         'page_id':'427579681383478',
@@ -58,6 +74,7 @@ def main():
     access_token=input_url_with_token()
     cfg['access_token']=access_token
     extented_token=extend_token(cfg, client_id, client_secret)
+    post_message(cfg)
 
     
     
