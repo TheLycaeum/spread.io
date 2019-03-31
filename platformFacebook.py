@@ -13,6 +13,15 @@ def get_url(params):
     url = facebook.get_authorize_url(**params)
     return url
 
+def input_url_with_token():
+    '''Takes the new url which holds the token and splits the string to get the access_token'''
+    url_with_token=''
+    url_with_token = input('After Granting permission please paste url Here:  ')
+    access_tok=url_with_token.split('=')
+    access_to=access_tok[1].split("&")
+    access_token=access_to[0]
+    return access_token
+
 def main():
     cfg={
         'page_id':'427579681383478',
@@ -27,6 +36,7 @@ def main():
               'redirect_uri': redirect_uri}
     url=get_url(params)
     open_browser(url)
+    access_token=input_url_with_token()
     
 if __name__=="__main__":
     facebook = OAuth2Service(name='spread',
