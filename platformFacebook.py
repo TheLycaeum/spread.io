@@ -35,6 +35,12 @@ def get_api(cfg):
             graph=f.GraphAPI(page_access_token)
     return graph
 
+def extend_token(cfg, client_id, client_secret):
+    ''' Extend the expiration time of a valid OAuth access token.'''
+    appi=get_api(cfg)
+    extended_token = appi.extend_access_token(client_id, client_secret)
+    return (extended_token['access_token'])
+
 def main():
     cfg={
         'page_id':'427579681383478',
@@ -51,6 +57,8 @@ def main():
     open_browser(url)
     access_token=input_url_with_token()
     cfg['access_token']=access_token
+    extented_token=extend_token(cfg, client_id, client_secret)
+
     
     
 if __name__=="__main__":
