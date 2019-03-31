@@ -16,3 +16,10 @@ def open_browser(url):
         """open the url on browser"""
         webbrowser.open(url)
         time.sleep(1)
+
+def get_key_and_secret():
+        # ask user to verify the PIN generated in broswer
+        verifier = input('PIN: ').strip()
+        touple_of_keys = auth.get_access_token(verifier)
+        list_of_keys = list(touple_of_keys)
+        return list_of_keys
