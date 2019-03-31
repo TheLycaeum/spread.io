@@ -36,3 +36,13 @@ def post_tweet(list_of_keys):
     tweet =input("Tweet here: " ) # toDo 
     api.update_status(tweet)
 
+def main():
+        url = get_url()
+        open_browser(url)
+        list_of_keys =  get_key_and_secret()
+        post_tweet(list_of_keys)
+
+if __name__ == "__main__":
+        main()
+
+
