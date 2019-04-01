@@ -10,8 +10,13 @@ class Twitter(Platform):
         self.app_file = app_file
         self.user_file = user_file
 
-        self.load_app_apikey()
 
+    def load(self):
+        "Loads keys and api"
+        self.load_app_apikey()
+        self.load_user_key()
+        self.api = tweepy.API(self.access)
+        self.status = self.api.verify_credentials()
 
     def load_app_apikey(self):
         "Loads app api key"
@@ -27,7 +32,6 @@ class Twitter(Platform):
         self.keys = self.read_config(self.user_file)
         self.access.set_access_token(self.keys[0],
                                      self.keys[1])
-        self.api = tweepy.API(self.access)
 
 
     def read_config(self, filename):
@@ -67,12 +71,18 @@ class Twitter(Platform):
         time.sleep(.5)
         tweet = input("Tweet here: ")
         self.api.update_status(tweet)
-        # a = self.api.verify_credentials()
-        # print(a)
 
 
 def main():
     pluggin = Twitter(".config_twitter_app",".config_twitter_user")
+    try:
+        pluggin.load()
+        if pluggin.status:
+            print(True)
+        else:
+            print(False)
+    except:
+        print(None)
 
 if __name__ == '__main__':
     main()
