@@ -1,5 +1,4 @@
 import webbrowser
-import time
 import tweepy
 from platform import Platform
 
@@ -59,13 +58,13 @@ class Twitter(Platform):
         "Open the twitter in browser to authorize the app"
         url = self.access.get_authorization_url()
         webbrowser.open(url)
-        time.sleep(1)
         self.get_user_keys()
         self.write_user_keys(self.user_file)
+        self.check_link() ###
 
     def get_user_keys(self):
         "Ask user to verify the PIN generated in browser"
-        verifier = input('PIN: ').strip()
+        verifier = input('PIN: ').strip() ###
         self.keys = self.access.get_access_token(verifier)
 
     def write_user_keys(self, user_file):
@@ -75,18 +74,20 @@ class Twitter(Platform):
             file.write(string)
 
 
-    def post(self):
-        "post tweet using api"
-        username = self.api.me().name
-        print("Welcome ", username)
-        time.sleep(.5)
-        tweet = input("Tweet here: ")
+    def post(self, tweet):
+        "Posts the tweet using api"
         self.api.update_status(tweet)
 
 
 def main():
     pluggin = Twitter(".config_twitter_app",".config_twitter_user")
     # print(pluggin.is_linked)
+    while not pluggin.is_linked:
+        pluggin.log_in()
+
+    message = "Testing; app testing"
+    status = pluggin.post(message)
+    # print(status)
 
 if __name__ == '__main__':
     main()
