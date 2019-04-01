@@ -12,9 +12,6 @@ class Twitter(Platform):
 
         self.load_app_apikey()
 
-        # self.keys = [1,2]
-        # self.keys[0], self.keys[1] = self.read_config(self.user_file)
-        # self.post()
 
     def load_app_apikey(self):
         "Loads app api key"
@@ -24,6 +21,14 @@ class Twitter(Platform):
         else:
             self.access = tweepy.OAuthHandler(consumer_key,
                                               consumer_secret)
+
+    def load_user_key(self):
+        "Loads user access token"
+        self.keys = self.read_config(self.user_file)
+        self.access.set_access_token(self.keys[0],
+                                     self.keys[1])
+        self.api = tweepy.API(self.access)
+
 
     def read_config(self, filename):
         "Reads config file and store apikey values"
@@ -46,7 +51,7 @@ class Twitter(Platform):
     def get_user_keys(self):
         "Ask user to verify the PIN generated in browser"
         verifier = input('PIN: ').strip()
-        self.keys = list(self.access.get_access_token(verifier))
+        self.keys = self.access.get_access_token(verifier)
 
     def write_user_keys(self, user_file):
         string = " Key = {} \n Secret = {}".format(str(self.keys[0]),
@@ -57,19 +62,17 @@ class Twitter(Platform):
 
     def post(self):
         "post tweet using api"
-        self.access.set_access_token(self.keys[0],
-                                     self.keys[1])
-        api = tweepy.API(self.access)
-        username = api.me().name
+        username = self.api.me().name
         print("Welcome ", username)
         time.sleep(.5)
         tweet = input("Tweet here: ")
-        api.update_status(tweet)
+        self.api.update_status(tweet)
+        # a = self.api.verify_credentials()
+        # print(a)
 
 
 def main():
     pluggin = Twitter(".config_twitter_app",".config_twitter_user")
-    # pluggin.log_in()
 
 if __name__ == '__main__':
     main()
