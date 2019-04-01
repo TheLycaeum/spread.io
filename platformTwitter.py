@@ -80,7 +80,7 @@ class Twitter(Platform):
 
 
 def main():
-    pluggin = Twitter(".config_twitter_app",".config_twitter_user")
+    pluggin = Twitter("./.config/.config_twitter_app","./.config/.config_twitter_user")
     # print(pluggin.is_linked)
     while not pluggin.is_linked:
         pluggin.log_in()
