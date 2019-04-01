@@ -10,13 +10,24 @@ class Twitter(Platform):
         self.app_file = app_file
         self.user_file = user_file
 
+        self.check_link()
+
+
+    def check_link(self):
+        "Checks whether user is linked to twitter account or not"
+        self.load()
+        try:
+            self.username = self.api.me().name
+            self.is_linked = True
+        except :
+            self.is_linked = False
+            # raise Exception("Error occured")
 
     def load(self):
         "Loads keys and api"
         self.load_app_apikey()
         self.load_user_key()
         self.api = tweepy.API(self.access)
-        self.status = self.api.verify_credentials()
 
     def load_app_apikey(self):
         "Loads app api key"
@@ -75,14 +86,7 @@ class Twitter(Platform):
 
 def main():
     pluggin = Twitter(".config_twitter_app",".config_twitter_user")
-    try:
-        pluggin.load()
-        if pluggin.status:
-            print(True)
-        else:
-            print(False)
-    except:
-        print(None)
+    # print(pluggin.is_linked)
 
 if __name__ == '__main__':
     main()
