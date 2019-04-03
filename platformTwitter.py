@@ -7,6 +7,7 @@ import configparser
 class Twitter(Platform):
     "Platform for twitter"
     def __init__(self, filename):
+        self.name = "Twitter"
         self.filename = filename
         self.load()
         self.check_link()

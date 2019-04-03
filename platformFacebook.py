@@ -9,6 +9,7 @@ class Facebook(Platform):
     "Platform for Facebook"
 
     def __init__(self, filename):
+        self.name = "Facebook"
         self.configfile = filename
         self.read_config()
         self.load_app_apikey()
@@ -23,8 +24,8 @@ class Facebook(Platform):
         try:
             graph = fb.GraphAPI(self.access_token)
             response = graph.get_object('me')  
-            self.name = response['name']
-            #print("Logged in as: ", self.name)
+            self.username = response['name']
+            #print("Logged in as: ", self.username)
             self.is_linked = True
         except :
             self.is_linked = False
