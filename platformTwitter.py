@@ -1,20 +1,18 @@
 import webbrowser
 import tweepy
 from platform import Platform
+import configparser
+
 
 class Twitter(Platform):
     "Platform for twitter"
-
-    def __init__(self, app_file, user_file):
-        self.app_file = app_file
-        self.user_file = user_file
-
-        self.check_link()
-
-
-    def check_link(self):
-        "Checks whether user is linked to twitter account or not"
+    def __init__(self, filename):
+        self.filename = filename
         self.load()
+        self.check_link()
+        
+    def check_link(self):
+        "Check whether user is linked to twitter account or not"
         try:
             self.username = self.api.me().name
             self.is_linked = True
@@ -24,42 +22,40 @@ class Twitter(Platform):
 
     def load(self):
         "Loads keys and api"
+        self.read_config()
         self.load_app_apikey()
         self.load_user_key()
         self.api = tweepy.API(self.access)
 
     def load_app_apikey(self):
         "Loads app api key"
-        consumer_key, consumer_secret = self.read_config(self.app_file)
-        if consumer_key == "XXXXX" or consumer_secret == 'XXXXX':
+        if self.consumer_key == "XXXXX" or self.consumer_secret == 'XXXXX':
             raise Exception("You haven't configured the API key. Please read Readme")
         else:
-            self.access = tweepy.OAuthHandler(consumer_key,
-                                              consumer_secret)
+            self.access = tweepy.OAuthHandler(self.consumer_key,
+                                              self.consumer_secret)
 
     def load_user_key(self):
         "Loads user access token"
-        self.keys = self.read_config(self.user_file)
-        self.access.set_access_token(self.keys[0],
-                                     self.keys[1])
+        self.access.set_access_token(self.access_token,self.access_secret)
 
 
-    def read_config(self, filename):
+    def read_config(self):
         "Reads config file and store apikey values"
-        with open(filename) as file:
-            lines = file.read()
-            item = lines.split('\n')
-            key = item[0].split('=')[1].strip()
-            secret =  item[1].split('=')[1].strip()
-            return key, secret
-
+        keys=configparser.ConfigParser()
+        keys.read(self.filename)
+        self.consumer_key=keys['twitter_app']['consumer_key']
+        self.consumer_secret=keys['twitter_app']['consumer_secret']
+        self.access_token=keys['twitter_user']['access_token']
+        self.access_secret=keys['twitter_user']['access_secret']
+                  
 
     def log_in(self):
         "Open the twitter in browser to authorize the app"
         url = self.access.get_authorization_url()
         webbrowser.open(url)
         self.get_user_keys()
-        self.write_user_keys(self.user_file)
+        self.write_user_keys()
         self.check_link() ###
 
     def get_user_keys(self):
@@ -67,27 +63,28 @@ class Twitter(Platform):
         verifier = input('PIN: ').strip() ###
         self.keys = self.access.get_access_token(verifier)
 
-    def write_user_keys(self, user_file):
-        string = " Key = {} \n Secret = {}".format(str(self.keys[0]),
-                                                   str(self.keys[1]))
-        with open(user_file, 'w') as file:
-            file.write(string)
-
-
+    def write_user_keys(self):
+        string = configparser.ConfigParser()
+        string.read(self.filename)
+        print()
+        string['twitter_user']['access_token']=self.keys[0]
+        string['twitter_user']['access_secret']=self.keys[1]
+        with open(self.filename, 'w') as files:
+            string.write(files)
+            
     def post(self, tweet):
         "Posts the tweet using api"
         self.api.update_status(tweet)
 
 
 def main():
-    pluggin = Twitter("./.config/.config_twitter_app","./.config/.config_twitter_user")
-    # print(pluggin.is_linked)
+    pluggin = Twitter(".config")
     while not pluggin.is_linked:
         pluggin.log_in()
-
+    print(pluggin.is_linked)
     message = "Testing; app testing"
     status = pluggin.post(message)
-    # print(status)
+    print(status)
 
 if __name__ == '__main__':
     main()
