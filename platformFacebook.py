@@ -11,8 +11,7 @@ class Facebook(Platform):
     def __init__(self, filename):
         self.name = "Facebook"
         self.configfile = filename
-        self.read_config()
-        self.load_app_apikey()
+        self.load()
         self.check_link()
         
 
@@ -57,6 +56,11 @@ class Facebook(Platform):
         config['Facebook_user']['access_token']= self.access_token['access_token']
         with open(self.configfile, 'w') as configfile:
             config.write(configfile)
+
+    def load(self):
+        "Loads keys and api"
+        self.read_config()
+        self.load_app_apikey()
                 
     def read_config(self):
         "Reads the .config file"
