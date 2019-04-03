@@ -11,11 +11,13 @@ class Spread():
         self.get_plugins()
     
     def get_plugins(self):
+        "Plugin all platforms"
         self.plugins = []
         self.plugins.append(Twitter(config_file))
         self.plugins.append(Facebook(config_file))
 
     def plugin_names(self):
+        "Gets name of all plugged-in platforms"
         names = []
         for plug in self.plugins:
             names.append(plug.name)
@@ -23,7 +25,12 @@ class Spread():
 
 
 
-if __name__ == '__main__':
+def main():
     app = Spread()
+
     names = app.plugin_names()
-    print(names)
+    appwin = Display(names)
+    # print(names)
+
+if __name__ == '__main__':
+    main()
