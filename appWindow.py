@@ -8,8 +8,8 @@ class Display():
     def __init__(self, window):
         self.win = window
         self.win.title("Spread.io")
-        self.win.geometry("500x500")
-
+        self.win.geometry("500x370")
+        self.win.resizable(0,0)
         self.show_platforms(plugins)
         self.message_box()
         self.send_button()
@@ -21,31 +21,25 @@ class Display():
 
     def show_platforms(self, plugins):
         "Shows the available platforms"
-        row = 0
+        self.vars = []
         for names in plugins:
             var = tk.IntVar()
             plat = tk.Checkbutton(self.win,
                                   text=names,
-                                  variable=var,
-                                  width=40)
-            plat.grid(column=2, row=row)
-            row += 7
+                                  variable=var)
+            self.vars.append(var)  ###
+            plat.pack(anchor='w')
 
     def message_box(self):
         "Creates a message-box to type the message/content"
         message = tk.Label(self.win,
-                           text="Message box",
-                           width=40)
-        message.grid(column=2, row=90)
-        self.scrolled_text()
-
-    def scrolled_text(self):
-        "Creates scrolled text to type message"
+                           text="Message box")
+        message.pack(anchor='center')
         self.text_frame = st.ScrolledText(self.win,
-                                          width=40,
+                                          width=55,
                                           height=10)
-        self.text_frame.grid(column=2,
-                             row=200)
+        self.text_frame.pack(anchor='center')
+
 
     def send_button(self):
         "Button for sending content"
@@ -53,14 +47,14 @@ class Display():
         button = tk.Button(self.win,
                            text="SEND",
                            command=self.send)
-        button.grid(row=300, column=2)
+        button.pack(anchor='e', padx=20, pady=20)
         
     def send(self):
         "Sends the content inside message-box"
         send_text = self.text_frame.get('1.0', tk.END)
         if len(send_text) == 1:
             mb.showinfo("Warning", "Box is empty!")
-        # print(send_text)
+        print(send_text)
 
 
 plugins = ["Facebook", "Twitter", "Instagram", "Google +"]
