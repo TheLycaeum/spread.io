@@ -5,16 +5,19 @@ from tkinter import messagebox as mb
 class Display():
     "User-interface for the app using Tkinter"
 
-    def __init__(self, window):
-        self.win = window
+    def __init__(self, plugins):
+        self.win = tk.Tk()
         self.win.title("Spread.io")
-        self.win.geometry("500x370")
+        self.win.geometry("500x400")
         self.win.resizable(0,0)
+        self.plugins = plugins
+
         self.add_button()
-        self.show_platforms(plugins)
+        self.show_platforms()
         self.message_box()
         self.send_button()
         self.show_screen()
+
 
     def show_screen(self):
         "Opens the 'Spread.io' window"
@@ -27,10 +30,10 @@ class Display():
                          command=self.add_window)
         plus.pack()
 
-    def show_platforms(self, plugins):
+    def show_platforms(self):
         "Shows the available platforms"
         self.vars = []
-        for names in plugins:
+        for names in self.plugins:
             var = tk.IntVar()
             plat = tk.Checkbutton(self.win,
                                   text=names,
@@ -69,12 +72,11 @@ class Display():
         self.subwin = subwin
         self.subwin.title("Add platforms")
         self.subwin.geometry("300x200")
-        for names in plugins:
-            var = tk.IntVar()
+        for names in self.plugins:
             plat = tk.Button(self.subwin,
                             text=names,
                             width=40,
-                             command=self.login_win)
+                            command=self.login_win)
             plat.pack()
 
     def login_win(self):
@@ -97,11 +99,3 @@ class Display():
         "Sends the content inside message-box"
         add_pin = self.checkpoint.get()
         print(add_pin)
-plugins = ["Facebook", "Twitter", "Instagram", "Google +"]
-def main():
-    window = tk.Tk()
-    Display(window)
-    # app = Display(window)
-
-if __name__ == '__main__':
-    main()
