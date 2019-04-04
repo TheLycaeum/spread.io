@@ -13,17 +13,48 @@ class Display():
         self.win.resizable(0,0)
 
 
-    def show_screen(self):
-        "Opens the 'Spread.io' window"
-        self.win.mainloop()
-
-    def add_button(self, names):
-        self.plug_names = names
+    def add_button(self, plug_ins):
         plus = tk.Button(self.win,
                          text="+",
                          width=20,
-                         command=self.add_window)
+                         command=lambda:self.add_window(plug_ins))
         plus.pack()
+
+    def add_window(self, plug_ins):
+        subwin = tk.Tk()
+        self.subwin = subwin
+        self.subwin.title("Add platforms")
+        self.subwin.geometry("300x{}".format(50*len(plug_ins)))
+        self.subwin.resizable(0,0)
+        for plug in plug_ins:
+            plat = tk.Button(self.subwin,
+                            text=plug.name,
+                            width=40,
+                            command=lambda:[plug.log_in(), self.login_window()])
+            plat.pack(pady=5)
+
+    def login_window(self):
+        self.subwin.destroy()
+        popwin = tk.Tk()
+        popwin.title("Login")
+        popwin.geometry("300x100")
+        popwin.resizable(0,0)
+
+        tk.Label(popwin,
+                 text="Enter Pin",
+                 width=15).pack()
+        self.checkpoint = tk.Entry(popwin, width=25)
+        self.checkpoint.pack()
+        login_btn = tk.Button(popwin,
+                              text="ADD",
+                              command=self.send_pin)
+        login_btn.pack()
+
+
+    def send_pin(self):
+        "Sends the content inside message-box"
+        add_pin = self.checkpoint.get()
+        print(add_pin)
 
     def show_platforms(self, linked):
         "Shows the available platforms"
@@ -35,6 +66,8 @@ class Display():
                                   variable=var)
             self.vars.append(var)  ###
             plat.pack(anchor='w')
+
+
 
     def message_box(self):
         "Creates a message-box to type the message/content"
@@ -62,42 +95,9 @@ class Display():
             mb.showinfo("Warning", "Box is empty!")
         print(send_text)
 
-    def add_window(self):
-        subwin = tk.Tk()
-        self.subwin = subwin
-        self.subwin.title("Add platforms")
-        self.subwin.geometry("300x{}".format(50*len(self.plug_names)))
-        self.subwin.resizable(0,0)
-        for names in self.plug_names:
-            plat = tk.Button(self.subwin,
-                            text=names,
-                            width=40,
-                            command=self.login_window)
-            plat.pack(pady=5)
-
-    def login_window(self):
-        self.subwin.destroy()
-        popwin = tk.Tk()
-        popwin.title("Entry Level")
-        popwin.geometry("300x100")
-        popwin.resizable(0,0)
-        lbl = tk.Label(popwin,
-                    text="Enter Pin",
-                    width=15)
-        lbl.pack()
-        self.checkpoint = tk.Entry(popwin, width=25)
-        self.checkpoint.pack()
-        login_btn = tk.Button(popwin,
-                              text="ADD",
-                              command=self.send_pin)
-        login_btn.pack()
-
-    def send_pin(self):
-        "Sends the content inside message-box"
-        add_pin = self.checkpoint.get()
-        print(add_pin)
-
-
+    def show_screen(self):
+        "Opens the 'Spread.io' window"
+        self.win.mainloop()
 
 
 
@@ -105,8 +105,8 @@ def main():
     app = Spread()    
     appwin = Display()
 
-    names = app.plugin_names()
-    appwin.add_button(names)
+    plugins = app.get_plugins()
+    appwin.add_button(plugins)
 
     linked = app.check_linked()
     appwin.show_platforms(linked)
