@@ -1,4 +1,3 @@
-from appWindow import *
 from platformTwitter import *
 from platformFacebook import *
 
@@ -22,15 +21,3 @@ class Spread():
         for plug in self.plugins:
             names.append(plug.name)
         return names
-
-
-
-def main():
-    app = Spread()
-
-    names = app.plugin_names()
-    appwin = Display(names)
-    # print(names)
-
-if __name__ == '__main__':
-    main()

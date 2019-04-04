@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import scrolledtext as st
 from tkinter import messagebox as mb
+from spread import Spread
 
 class Display():
     "User-interface for the app using Tkinter"
@@ -101,3 +102,17 @@ class Display():
         "Sends the content inside message-box"
         add_pin = self.checkpoint.get()
         print(add_pin)
+
+
+
+
+
+def main():
+    app = Spread()
+    
+    names = app.plugin_names()
+    appwin = Display(names)
+    # print(names)
+
+if __name__ == '__main__':
+    main()
