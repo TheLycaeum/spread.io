@@ -50,15 +50,16 @@ class Display():
         self.checkpoint.pack()
         login_btn = tk.Button(popwin,
                               text="ADD",
-                              command=self.send_pin)
+                              command=lambda:self.send_pin(plug))
         login_btn.pack()
 
 
-    def send_pin(self):
-        "Sends the content inside message-box"
+    def send_pin(self, plug):
+        "Sends authentication verifier to respective platforms"
         add_pin = self.checkpoint.get()
-        print(add_pin)
-
+        self.checkpoint.destroy()
+        plug.write_user_keys(add_pin)
+        
     def show_platforms(self, linked):
         "Shows the available platforms"
         self.vars = []
