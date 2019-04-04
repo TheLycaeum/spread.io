@@ -84,21 +84,33 @@ class Display():
         self.text_frame.pack(anchor='center')
 
 
-    def send_button(self):
+    def send_button(self,linked):
         "Button for sending content"
         send_text = self.text_frame.get('1.0', tk.END)
         button = tk.Button(self.win,
                            text="SEND",
-                           command=self.send)
+                           command=lambda:[self.send(linked)])
         button.pack(anchor='e', padx=20, pady=20)
         
-    def send(self):
+    def send(self,linked):
         "Sends the content inside message-box"
         send_text = self.text_frame.get('1.0', tk.END)
         if len(send_text) == 1:
             mb.showinfo("Warning", "Box is empty!")
-        print(send_text)
+        else:
+            self.put_post(linked, send_text,self.vars)
+            print(send_text, self.vars[0].get())
 
+    def put_post(self, linked,send_text,vars):
+        "Posts message to respective linked platforms"
+        for i in range(len(linked)):
+            if vars[i].get() == 1:
+                linked[i].post(send_text)
+        
+        
+        
+
+    
     def show_screen(self):
         "Opens the 'Spread.io' window"
         self.win.mainloop()
@@ -116,7 +128,7 @@ def main():
     appwin.show_platforms(linked)
 
     appwin.message_box()
-    appwin.send_button()
+    appwin.send_button(linked)
     appwin.show_screen()
 
 
