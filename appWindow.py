@@ -27,16 +27,19 @@ class Display():
         self.subwin.geometry("300x{}".format(50*len(plug_ins)))
         self.subwin.resizable(0,0)
         for plug in plug_ins:
+            self.create_button(plug)
+
+    def create_button(self, plug):
             plat = tk.Button(self.subwin,
                             text=plug.name,
                             width=40,
-                            command=lambda:[plug.log_in(), self.login_window()])
+                            command=lambda:[plug.log_in(), self.login_window(plug)])
             plat.pack(pady=5)
 
-    def login_window(self):
+    def login_window(self, plug):
         self.subwin.destroy()
         popwin = tk.Tk()
-        popwin.title("Login")
+        popwin.title("Login to {}".format(plug.name))
         popwin.geometry("300x100")
         popwin.resizable(0,0)
 
@@ -47,15 +50,16 @@ class Display():
         self.checkpoint.pack()
         login_btn = tk.Button(popwin,
                               text="ADD",
-                              command=self.send_pin)
+                              command=lambda:self.send_pin(plug))
         login_btn.pack()
 
 
-    def send_pin(self):
-        "Sends the content inside message-box"
+    def send_pin(self, plug):
+        "Sends authentication verifier to respective platforms"
         add_pin = self.checkpoint.get()
-        print(add_pin)
-
+        self.checkpoint.destroy()
+        plug.write_user_keys(add_pin)
+        
     def show_platforms(self, linked):
         "Shows the available platforms"
         self.vars = []
@@ -80,21 +84,33 @@ class Display():
         self.text_frame.pack(anchor='center')
 
 
-    def send_button(self):
+    def send_button(self,linked):
         "Button for sending content"
         send_text = self.text_frame.get('1.0', tk.END)
         button = tk.Button(self.win,
                            text="SEND",
-                           command=self.send)
+                           command=lambda:[self.send(linked)])
         button.pack(anchor='e', padx=20, pady=20)
         
-    def send(self):
+    def send(self,linked):
         "Sends the content inside message-box"
         send_text = self.text_frame.get('1.0', tk.END)
         if len(send_text) == 1:
             mb.showinfo("Warning", "Box is empty!")
-        print(send_text)
+        else:
+            self.put_post(linked, send_text,self.vars)
+            print(send_text, self.vars[0].get())
 
+    def put_post(self, linked,send_text,vars):
+        "Posts message to respective linked platforms"
+        for i in range(len(linked)):
+            if vars[i].get() == 1:
+                linked[i].post(send_text)
+        
+        
+        
+
+    
     def show_screen(self):
         "Opens the 'Spread.io' window"
         self.win.mainloop()
@@ -112,7 +128,7 @@ def main():
     appwin.show_platforms(linked)
 
     appwin.message_box()
-    appwin.send_button()
+    appwin.send_button(linked)
     appwin.show_screen()
 
 
