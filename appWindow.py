@@ -27,16 +27,19 @@ class Display():
         self.subwin.geometry("300x{}".format(50*len(plug_ins)))
         self.subwin.resizable(0,0)
         for plug in plug_ins:
+            self.create_button(plug)
+
+    def create_button(self, plug):
             plat = tk.Button(self.subwin,
                             text=plug.name,
                             width=40,
-                            command=lambda:[plug.log_in(), self.login_window()])
+                            command=lambda:[plug.log_in(), self.login_window(plug)])
             plat.pack(pady=5)
 
-    def login_window(self):
+    def login_window(self, plug):
         self.subwin.destroy()
         popwin = tk.Tk()
-        popwin.title("Login")
+        popwin.title("Login to {}".format(plug.name))
         popwin.geometry("300x100")
         popwin.resizable(0,0)
 
