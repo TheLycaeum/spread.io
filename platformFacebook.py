@@ -1,5 +1,5 @@
 import webbrowser
-from platform import Platform
+from platforms import Platform
 from rauth import OAuth2Service
 import facebook as fb
 import configparser

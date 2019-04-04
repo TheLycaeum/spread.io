@@ -1,6 +1,6 @@
 import webbrowser
 import tweepy
-from platform import Platform
+from platforms import Platform
 import configparser
 
 
