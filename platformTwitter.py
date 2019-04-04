@@ -48,7 +48,7 @@ class Twitter(Platform):
         consumer_secret = config['twitter_app']['consumer_secret'] ##
         self.access_token = config['twitter_user']['access_token']
         self.access_secret = config['twitter_user']['access_secret']
-
+        return (consumer_key, consumer_secret)
     def log_in(self):
         "Open the twitter in browser to authorize the app"
         url = self.access.get_authorization_url()
