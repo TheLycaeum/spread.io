@@ -6,38 +6,32 @@ from spread import Spread
 class Display():
     "User-interface for the app using Tkinter"
 
-    def __init__(self, plugins):
+    def __init__(self):
         self.win = tk.Tk()
         self.win.title("Spread.io")
         self.win.geometry("500x400")
         self.win.resizable(0,0)
-        self.plugins = plugins
-
-        self.add_button()
-        self.show_platforms()
-        self.message_box()
-        self.send_button()
-        self.show_screen()
 
 
     def show_screen(self):
         "Opens the 'Spread.io' window"
         self.win.mainloop()
 
-    def add_button(self):
+    def add_button(self, names):
+        self.plug_names = names
         plus = tk.Button(self.win,
                          text="+",
                          width=20,
                          command=self.add_window)
         plus.pack()
 
-    def show_platforms(self):
+    def show_platforms(self, linked):
         "Shows the available platforms"
         self.vars = []
-        for names in self.plugins:
+        for plug in linked:
             var = tk.IntVar()
             plat = tk.Checkbutton(self.win,
-                                  text=names,
+                                  text=plug.name,
                                   variable=var)
             self.vars.append(var)  ###
             plat.pack(anchor='w')
@@ -72,16 +66,16 @@ class Display():
         subwin = tk.Tk()
         self.subwin = subwin
         self.subwin.title("Add platforms")
-        self.subwin.geometry("300x{}".format(50*len(self.plugins)))
+        self.subwin.geometry("300x{}".format(50*len(self.plug_names)))
         self.subwin.resizable(0,0)
-        for names in self.plugins:
+        for names in self.plug_names:
             plat = tk.Button(self.subwin,
                             text=names,
                             width=40,
-                            command=self.login_win)
+                            command=self.login_window)
             plat.pack(pady=5)
 
-    def login_win(self):
+    def login_window(self):
         self.subwin.destroy()
         popwin = tk.Tk()
         popwin.title("Entry Level")
@@ -108,11 +102,19 @@ class Display():
 
 
 def main():
-    app = Spread()
-    
+    app = Spread()    
+    appwin = Display()
+
     names = app.plugin_names()
-    appwin = Display(names)
-    # print(names)
+    appwin.add_button(names)
+
+    linked = app.check_linked()
+    appwin.show_platforms(linked)
+
+    appwin.message_box()
+    appwin.send_button()
+    appwin.show_screen()
+
 
 if __name__ == '__main__':
     main()
