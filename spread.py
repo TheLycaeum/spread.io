@@ -22,13 +22,13 @@ class Spread():
             names.append(plug.name)
         return names
 
-     def check_linked(self, plugin):
-        "Checks if plugin is linked"
-        #the plugin arg should be Twitter/Facebook(config_file) 
-        status=False
-        plugin.check_link()
-        status=plugin.is_linked
-        return status
+    def check_linked(self):
+        "Checks if plugins are linked"
+        linked = []
+        for plug in self.plugins:
+            if plug.is_linked:
+                linked.append(plug)
+        return linked
 
     def log_in(self, plugin):
         "Logs in the respective plugin to retrive access_token"
