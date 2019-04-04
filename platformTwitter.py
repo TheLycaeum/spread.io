@@ -49,15 +49,12 @@ class Twitter(Platform):
         self.consumer_secret=keys['twitter_app']['consumer_secret']
         self.access_token=keys['twitter_user']['access_token']
         self.access_secret=keys['twitter_user']['access_secret']
-                  
+
 
     def log_in(self):
         "Open the twitter in browser to authorize the app"
         url = self.access.get_authorization_url()
         webbrowser.open(url)
-        self.get_user_keys()
-        self.write_user_keys()
-        self.check_link() ###
 
     def get_user_keys(self):
         "Ask user to verify the PIN generated in browser"

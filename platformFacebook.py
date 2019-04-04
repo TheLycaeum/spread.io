@@ -37,7 +37,6 @@ class Facebook(Platform):
                   'redirect_uri': 'https://www.students.thelycaeum.in'}
         url = self.service.get_authorize_url(**params)
         webbrowser.open(url)
-        self.get_token_from_url()
 
     def get_token_from_url(self):
         "Gets access token from redirect url"
