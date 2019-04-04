@@ -71,19 +71,21 @@ class Display():
         subwin = tk.Tk()
         self.subwin = subwin
         self.subwin.title("Add platforms")
-        self.subwin.geometry("300x200")
+        self.subwin.geometry("300x{}".format(50*len(self.plugins)))
+        self.subwin.resizable(0,0)
         for names in self.plugins:
             plat = tk.Button(self.subwin,
                             text=names,
                             width=40,
                             command=self.login_win)
-            plat.pack()
+            plat.pack(pady=5)
 
     def login_win(self):
         self.subwin.destroy()
         popwin = tk.Tk()
         popwin.title("Entry Level")
-        popwin.geometry("300x200")
+        popwin.geometry("300x100")
+        popwin.resizable(0,0)
         lbl = tk.Label(popwin,
                     text="Enter Pin",
                     width=15)
