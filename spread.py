@@ -14,13 +14,7 @@ class Spread():
         self.plugins = []
         self.plugins.append(Twitter(config_file))
         self.plugins.append(Facebook(config_file))
-
-    def plugin_names(self):
-        "Gets name of all plugged-in platforms"
-        names = []
-        for plug in self.plugins:
-            names.append(plug.name)
-        return names
+        return self.plugins
 
     def check_linked(self):
         "Checks if plugins are linked"
@@ -30,10 +24,7 @@ class Spread():
                 linked.append(plug)
         return linked
 
-    def log_in(self, plugin):
-        "Logs in the respective plugin to retrive access_token"
-        plugin.log_in()
-
-    def post(self, plugin,message):
+    def post(self, plugin, message):
         "Post the message to the respective plugin"
-        plugin.post(message)
+        for plug in plugins:
+            plugin.post(message)
