@@ -8,7 +8,7 @@ class Twitter(Platform):
     "Platform for twitter"
     def __init__(self, filename):
         self.name = "Twitter"
-        self.filename = filename
+        self.configfile = filename
         self.load()
         self.check_link()
 
@@ -19,7 +19,6 @@ class Twitter(Platform):
             self.is_linked = True
         except:
             self.is_linked = False
-            # raise Exception("Error occured")
 
     def load(self):
         "Loads keys and api"
@@ -43,12 +42,12 @@ class Twitter(Platform):
 
     def read_config(self):
         "Reads config file and store apikey values"
-        file = configparser.ConfigParser()
-        file.read(self.filename)
-        self.consumer_key = file['twitter_app']['consumer_key']       ## Should remove from instance
-        self.consumer_secret = file['twitter_app']['consumer_secret'] ##
-        self.access_token = file['twitter_user']['access_token']
-        self.access_secret = file['twitter_user']['access_secret']
+        config = configparser.ConfigParser()
+        config.read(self.configfile)
+        self.consumer_key = config['twitter_app']['consumer_key']       ## Should remove from instance
+        self.consumer_secret = config['twitter_app']['consumer_secret'] ##
+        self.access_token = config['twitter_user']['access_token']
+        self.access_secret = config['twitter_user']['access_secret']
 
     def log_in(self):
         "Open the twitter in browser to authorize the app"
@@ -58,12 +57,12 @@ class Twitter(Platform):
     def write_user_keys(self, pin):
         "Get access tokens using the PIN generated in browser"
         keys = self.access.get_access_token(pin)
-        file = configparser.ConfigParser()
-        file.read(self.filename)
-        file['twitter_user']['access_token'] = keys[0]
-        file['twitter_user']['access_secret'] = keys[1]
-        with open(self.filename, 'w') as files:
-            file.write(files)
+        config = configparser.ConfigParser()
+        config.read(self.configfile)
+        config['twitter_user']['access_token'] = keys[0]
+        config['twitter_user']['access_secret'] = keys[1]
+        with open(self.configfile, 'w') as files:
+            config.write(files)
 
     def post(self, tweet):
         "Posts the tweet using api"
