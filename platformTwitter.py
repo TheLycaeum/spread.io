@@ -22,18 +22,18 @@ class Twitter(Platform):
 
     def load(self):
         "Loads keys and api"
-        self.read_config()
-        self.load_app_apikey()
+        consumer_key, consumer_secret = self.read_config()
+        self.load_app_apikey(consumer_key, consumer_secret)
         self.load_user_key()
         self.api = tweepy.API(self.access)
 
-    def load_app_apikey(self):
+    def load_app_apikey(self, consumer_key, consumer_secret):
         "Loads app api key"
-        if self.consumer_key == "XXXXX" or self.consumer_secret == 'XXXXX':
+        if consumer_key == "XXXXX" or consumer_secret == 'XXXXX':
             raise Exception("You haven't configured the API key. Please read Readme")
         else:
-            self.access = tweepy.OAuthHandler(self.consumer_key,
-                                              self.consumer_secret)
+            self.access = tweepy.OAuthHandler(consumer_key,
+                                              consumer_secret)
 
     def load_user_key(self):
         "Loads user access token"
@@ -44,11 +44,12 @@ class Twitter(Platform):
         "Reads config file and store apikey values"
         config = configparser.ConfigParser()
         config.read(self.configfile)
-        consumer_key = config['twitter_app']['consumer_key']       ## Should remove from instance
-        consumer_secret = config['twitter_app']['consumer_secret'] ##
+        consumer_key = config['twitter_app']['consumer_key']
+        consumer_secret = config['twitter_app']['consumer_secret']
         self.access_token = config['twitter_user']['access_token']
         self.access_secret = config['twitter_user']['access_secret']
         return (consumer_key, consumer_secret)
+
     def log_in(self):
         "Open the twitter in browser to authorize the app"
         url = self.access.get_authorization_url()
@@ -67,3 +68,5 @@ class Twitter(Platform):
     def post(self, tweet):
         "Posts the tweet using api"
         self.api.update_status(tweet)
+
+        
