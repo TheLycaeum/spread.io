@@ -36,6 +36,7 @@ class Facebook(Platform):
         webbrowser.open(url)
 
     def write_user_keys(self, url):
+        "Writes the access_token to .config file"
         self.get_token_from_url(url)
         self.extend_token()
 
@@ -44,6 +45,15 @@ class Facebook(Platform):
         config['Facebook_user']['access_token'] = self.access_token['access_token']
         with open(self.configfile, 'w') as configfile:
             config.write(configfile)
+
+    def delink(self):
+        "Delinks the platform"
+        config = configparser.ConfigParser()
+        config.read(self.configfile)
+        config['Facebook_user']['access_token'] = 'XXXXX'
+        with open(self.configfile, 'w') as configfile:
+            config.write(configfile)
+
 
     def get_token_from_url(self, url):
         "Gets access token from redirect url"
