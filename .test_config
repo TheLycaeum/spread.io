@@ -1,0 +1,16 @@
+[twitter_app]
+consumer_key = Y22pLniUdwNsg5tg7B7UgFlnn
+consumer_secret = P85zJuLD7jBP1eW9EBZMjDbQkdVacljBni5y9gwd0qE5c13bWj
+
+[twitter_user]
+access_token = 1112014959901175808-u77cU9I5dbT3NAhs5EboFKnxlSrtBf
+access_secret = HVsJWNoz0ozEZ9GOhypjpbX4N1URITl4dPNq4U9DgzWMz
+
+[Facebook_client]
+client_id = 1234179660062675
+client_secret = f04ef73cdaf8ecdcbfe536356ef31974
+name = spread
+
+[Facebook_user]
+access_token = XXXXX
+page_name = Test
