@@ -76,4 +76,13 @@ class Twitter(Platform):
 
     def post(self, tweet):
         "Posts the tweet using api"
-        self.api.update_status(tweet)
+        try:
+            self.api.update_status(tweet)
+            self.post_status = True
+        except:
+            self.post_status = False
+            raise Exception("Was Unable to post, check network connection")
+
+if __name__=='__main__':
+    p=Twitter('.config')
+    p.post('Testing')
