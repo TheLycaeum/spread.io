@@ -95,19 +95,27 @@ class Facebook(Platform):
     def post(self,message):
         " Checks the Page is authentic and then Posts the message in facebook page"
         # self.graph=fb.GraphAPI(self.access_token)
+        self.post_status= False
         key = configparser.ConfigParser()
         key.read(self.configfile)
         self.access_token=key['Facebook_user']['access_token']
         graph = fb.GraphAPI(self.access_token)
-        response = graph.get_object('me/accounts')
+        try:
+            response = graph.get_object('me/accounts')
+            self.post_status = True
+        except:
+            self.post_status = False
+            raise Exception("Was Unable to post, check network connection")
+
         for page in response['data']:
 	    #finding if the page is granted permission and obtaining its page_token
             if page['name'] == self.page_name:
                 page_token = page['access_token']
                 self.graph = fb.GraphAPI(page_token)
+            else:
+                raise Exception("Cant find page in permission list")
         self.graph.put_object("me", "feed", message=message)
-        print("Posted")
-
+            
 if __name__ == '__main__':
     pluggin = Facebook('.config')
     message = 'This works i hope !'
