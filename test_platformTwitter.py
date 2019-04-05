@@ -22,3 +22,8 @@ def test_read_config():
     assert twet.access_token == '1112014959901175808-u77cU9I5dbT3NAhs5EboFKnxlSrtBf'
     assert twet.access_secret == 'HVsJWNoz0ozEZ9GOhypjpbX4N1URITl4dPNq4U9DgzWMz' 
 
+def test_load_app_apikey():
+    if twet.consumer_key == "XXXXX" :
+        raise Exception("You haven't configured the API key. Please read Readme")
+    if twet.consumer_secret == 'XXXXX':
+            raise Exception("You haven't configured the API key. Please read Readme")
