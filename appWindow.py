@@ -70,7 +70,14 @@ class Display():
                                   variable=var)
             self.vars.append(var)  ###
             plat.pack(anchor='w')
+            self.delink_button(plug)
 
+
+    def delink_button(self, plug):
+            delink_btn = tk.Button(self.win,
+                                   text="LOG OUT",
+                                   command=plug.delink)
+            delink_btn.pack(anchor='e', pady=1)
 
 
     def message_box(self):
@@ -99,18 +106,14 @@ class Display():
             mb.showinfo("Warning", "Box is empty!")
         else:
             self.put_post(linked, send_text,self.vars)
-            print(send_text, self.vars[0].get())
+        
 
     def put_post(self, linked,send_text,vars):
         "Posts message to respective linked platforms"
         for i in range(len(linked)):
             if vars[i].get() == 1:
                 linked[i].post(send_text)
-        
-        
-        
 
-    
     def show_screen(self):
         "Opens the 'Spread.io' window"
         self.win.mainloop()
