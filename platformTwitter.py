@@ -83,6 +83,3 @@ class Twitter(Platform):
             self.post_status = False
             raise Exception("Was Unable to post, check network connection")
 
-if __name__=='__main__':
-    p=Twitter('.config')
-    p.post('Testing')
