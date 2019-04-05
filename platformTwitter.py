@@ -39,6 +39,7 @@ class Twitter(Platform):
         "Loads user access token"
         self.access.set_access_token(self.access_token,
                                      self.access_secret)
+        self.url = self.access.get_authorization_url()
 
     def read_config(self):
         "Reads config file and store apikey values"
@@ -52,8 +53,7 @@ class Twitter(Platform):
 
     def log_in(self):
         "Open the twitter in browser to authorize the app"
-        url = self.access.get_authorization_url()
-        webbrowser.open(url)
+        webbrowser.open(self.url)
 
     def write_user_keys(self, pin):
         "Get access tokens using the PIN generated in browser"
@@ -65,8 +65,15 @@ class Twitter(Platform):
         with open(self.configfile, 'w') as files:
             config.write(files)
 
+    def delink(self):
+        "Delink a user by removing config keys"
+        config = configparser.ConfigParser()
+        config.read(self.configfile)
+        config['twitter_user']['access_token'] = "XXXXX"
+        config['twitter_user']['access_secret'] = "XXXXX"
+        with open(self.configfile, 'w') as files:
+            config.write(files)
+
     def post(self, tweet):
         "Posts the tweet using api"
         self.api.update_status(tweet)
-
-        
