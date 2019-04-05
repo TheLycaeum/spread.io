@@ -64,6 +64,15 @@ class Twitter(Platform):
         with open(self.configfile, 'w') as files:
             config.write(files)
 
+    def delink(self):
+        "Delink a user by removing config keys"
+        config = configparser.ConfigParser()
+        config.read(self.configfile)
+        config['twitter_user']['access_token'] = "XXXXX"
+        config['twitter_user']['access_secret'] = "XXXXX"
+        with open(self.configfile, 'w') as files:
+            config.write(files)
+
     def post(self, tweet):
         "Posts the tweet using api"
         self.api.update_status(tweet)
