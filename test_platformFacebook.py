@@ -20,5 +20,11 @@ def test_read_config():
 def test_write_user_keys():
     face=Facebook(file_name)
     assert face.access_token == 'XXXXX'
+
+def test_token_from_url():
+    face=Facebook(file_name)
+    url='abc=Testgood&ok'
+    face.get_token_from_url(url)
+    assert face.access_token == 'Testgood'
     
     
