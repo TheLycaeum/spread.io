@@ -26,5 +26,14 @@ def test_token_from_url():
     url='abc=Testgood&ok'
     face.get_token_from_url(url)
     assert face.access_token == 'Testgood'
+
+def test_delink():
+    face=Facebook(file_name)
+    face.delink()
+    assert face.access_token == 'XXXXX'
+
+
+
+
     
     
