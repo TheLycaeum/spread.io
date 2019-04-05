@@ -17,4 +17,8 @@ def test_read_config():
      assert face.client_id  == '1234179660062675'
      assert face.secret =='f04ef73cdaf8ecdcbfe536356ef31974'
 
+def test_write_user_keys():
+    face=Facebook(file_name)
+    assert face.access_token == 'XXXXX'
+    
     
