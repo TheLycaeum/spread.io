@@ -105,14 +105,16 @@ class Facebook(Platform):
             self.post_status = True
         except:
             self.post_status = False
-            raise Exception("Was Unable to post, check network connection")
-
+           # raise Exception("Was Unable to post, check network connection")
+        response = graph.get_object('me/accounts')
         for page in response['data']:
 	    #finding if the page is granted permission and obtaining its page_token
             if page['name'] == self.page_name:
+                self.page_status= True            
                 page_token = page['access_token']
                 self.graph = fb.GraphAPI(page_token)
             else:
+                self.page_status= False
                 raise Exception("Cant find page in permission list")
         self.graph.put_object("me", "feed", message=message)
             

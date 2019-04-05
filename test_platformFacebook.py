@@ -32,7 +32,31 @@ def test_delink():
     face.delink()
     assert face.access_token == 'XXXXX'
 
+def test_post_Page_check():
+    face=Facebook(file_name)
+    config = configparser.ConfigParser()
+    config.read(file_name)
+    config['Facebook_user']['access_token'] = 'EAARietg6H9MBAG8yjTeQYZC1uJqQGFvZCpmnQCzrxZBhILZChMRUohQlgZCrtEySOHyZCEyeVnNguZBU42fRZBPZCAjlObC3sIxaQwKLfbljw6Wu4WWZAOd7og3sxSmkBzKgrlg0h2PpADUeovympZAQX12xnEOsrhFjLYZD' 
+    with open(file_name, 'w') as configfile:
+        config.write(configfile)       
+    keys = configparser.ConfigParser()
+    keys.read(file_name)        
+    face.page_name=keys['Facebook_user']['page_name']
+    face.post("Testing")
+    assert face.page_status == True
+    #reseting .test_config
+    reset = configparser.ConfigParser()
+    reset.read(file_name)
+    reset['Facebook_user']['access_token'] = 'XXXXX'
+    with open(file_name, 'w') as configfile:
+        reset.write(configfile)
 
+
+        
+        
+    
+        
+    
 
 
     
