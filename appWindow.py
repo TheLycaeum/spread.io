@@ -123,10 +123,10 @@ class Display():
     def send_button(self,linked):
         "Button for sending content"
         send_text = self.text_frame.get('1.0', tk.END)
-        button = tk.Button(self.win,
+        self.button = tk.Button(self.win,
                            text="SEND",
                            command=lambda:[self.send(linked)])
-        button.pack(anchor='e', padx=20, pady=20)
+        self.button.pack(anchor='e', padx=20, pady=20)
         
     def send(self,linked):
         "Sends the content inside message-box"
@@ -149,7 +149,7 @@ class Display():
 
 
 def main():
-    app = Spread()    
+    app = Spread()
     appwin = Display(app)
 
     plugins = app.get_plugins()
