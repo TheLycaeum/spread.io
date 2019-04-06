@@ -83,15 +83,9 @@ class Display():
     def delink_button(self, plug):
         delink_btn = tk.Button(self.win,
                                text="LOG OUT",
-                               command=lambda:[self.delink(plug)])
+                               command=lambda:[plug.delink(), self.update_platforms()])
         delink_btn.pack(anchor='e', padx=20)
         return delink_btn
-
-    def delink(self, plug):
-        plug.delink()
-        plug.load()
-        plug.check_link()
-        self.update_platforms()
 
     def update_platforms(self):
         for obj in self.linked_platforms:
@@ -124,10 +118,10 @@ class Display():
         if len(send_text) == 1:
             mb.showinfo("Warning", "Box is empty!")
         else:
-            self.put_post(linked, send_text,self.vars)
+            self.put_post(linked, send_text, self.vars)
         
 
-    def put_post(self, linked,send_text,vars):
+    def put_post(self, linked, send_text, vars):
         "Posts message to respective linked platforms"
         for i in range(len(linked)):
             if vars[i].get() == 1:
