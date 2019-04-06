@@ -74,11 +74,21 @@ class Display():
                                   text=plug.name,
                                   variable=var)
             plat.pack(anchor='w')
-
+            
             d_button = self.delink_button(plug)
             self.vars.append(var)
             self.linked_platforms.append(plat)         
             self.linked_platforms.append(d_button)
+            var.trace("w", lambda *args:self.callback())
+
+    def callback(self):
+        list_vars = []
+        for i in self.vars:
+            list_vars.append(i.get())
+        if list_vars ==[1, 0] or list_vars == [0, 1] or list_vars == [1, 1]:
+            self.button['state'] = 'normal'
+        else:
+            self.button['state'] = 'disabled'
 
     def delink_button(self, plug):
         delink_btn = tk.Button(self.win,
