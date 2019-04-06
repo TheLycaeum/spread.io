@@ -6,11 +6,12 @@ from spread import Spread
 class Display():
     "User-interface for the app using Tkinter"
 
-    def __init__(self):
+    def __init__(self, app):
         self.win = tk.Tk()
         self.win.title("Spread.io")
         self.win.geometry("500x400")
         self.win.resizable(0,0)
+        self.app = app
 
 
     def add_button(self, plug_ins):
@@ -30,11 +31,11 @@ class Display():
             self.create_button(plug)
 
     def create_button(self, plug):
-            plat = tk.Button(self.subwin,
-                            text=plug.name,
-                            width=40,
-                            command=lambda:[plug.log_in(), self.login_window(plug)])
-            plat.pack(pady=5)
+        plat = tk.Button(self.subwin,
+                         text=plug.name,
+                         width=40,
+                         command=lambda:[self.login_window(plug), plug.log_in()])
+        plat.pack(pady=5)
 
     def login_window(self, plug):
         self.subwin.destroy()
@@ -50,7 +51,7 @@ class Display():
         self.checkpoint.pack()
         login_btn = tk.Button(popwin,
                               text="ADD",
-                              command=lambda:self.send_pin(plug))
+                              command=lambda:[self.send_pin(plug), popwin.destroy()])
         login_btn.pack()
 
 
@@ -59,26 +60,44 @@ class Display():
         add_pin = self.checkpoint.get()
         self.checkpoint.destroy()
         plug.write_user_keys(add_pin)
-        
+        plug.load()
+        plug.check_link()
+        self.update_platforms()
+
     def show_platforms(self, linked):
         "Shows the available platforms"
         self.vars = []
+        self.linked_platforms = []
         for plug in linked:
             var = tk.IntVar()
             plat = tk.Checkbutton(self.win,
                                   text=plug.name,
                                   variable=var)
-            self.vars.append(var)  ###
             plat.pack(anchor='w')
-            self.delink_button(plug)
 
+            d_button = self.delink_button(plug)
+            self.vars.append(var)
+            self.linked_platforms.append(plat)         
+            self.linked_platforms.append(d_button)
 
     def delink_button(self, plug):
-            delink_btn = tk.Button(self.win,
-                                   text="LOG OUT",
-                                   command=plug.delink)
-            delink_btn.pack(anchor='e', pady=1)
+        delink_btn = tk.Button(self.win,
+                               text="LOG OUT",
+                               command=lambda:[self.delink(plug)])
+        delink_btn.pack(anchor='e', padx=20)
+        return delink_btn
 
+    def delink(self, plug):
+        plug.delink()
+        plug.load()
+        plug.check_link()
+        self.update_platforms()
+
+    def update_platforms(self):
+        for obj in self.linked_platforms:
+            obj.destroy()
+        linked = self.app.check_linked()
+        self.show_platforms(linked)
 
     def message_box(self):
         "Creates a message-box to type the message/content"
@@ -119,19 +138,19 @@ class Display():
         self.win.mainloop()
 
 
-
 def main():
     app = Spread()    
-    appwin = Display()
+    appwin = Display(app)
 
     plugins = app.get_plugins()
     appwin.add_button(plugins)
 
     linked = app.check_linked()
-    appwin.show_platforms(linked)
-
     appwin.message_box()
     appwin.send_button(linked)
+
+    appwin.show_platforms(linked)
+
     appwin.show_screen()
 
 
