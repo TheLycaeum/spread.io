@@ -174,6 +174,7 @@ def main():
     appwin = Display(app)
 
     plugins = app.get_plugins()
+    app.load_platforms()
     appwin.add_button(plugins)
 
     linked = app.check_linked()
