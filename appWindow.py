@@ -158,9 +158,11 @@ class Display():
             else:
                 clear_text = False
                 string.append("Posting failed in {}\n".format(platform.name))
-        mb.showinfo("Post Status", "".join(string))
         if clear_text:
+            mb.showinfo("Post Status", "".join(string))
             self.text_frame.delete('1.0', tk.END)
+        else:
+            mb.showerror("Post Status", "".join(string))
 
     def show_screen(self):
         "Opens the 'Spread.io' window""successful "
