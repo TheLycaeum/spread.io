@@ -120,7 +120,6 @@ class Display():
 
     def send_button(self,linked):
         "Button for sending content"
-        send_text = self.text_frame.get('1.0', tk.END)
         self.button = tk.Button(self.win,
                            text="SEND",
                            command=lambda:[self.send(linked)])
@@ -133,14 +132,14 @@ class Display():
         if len(send_text) == 1:
             mb.showinfo("Warning", "Box is empty!")
         else:
-            self.put_post(linked, send_text,self.vars)
+            self.put_post(linked, send_text)
         
 
-    def put_post(self, linked,send_text,vars):
+    def put_post(self, linked, send_text):
         "Posts message to respective linked platforms"
-        for i in range(len(linked)):
-            if vars[i].get() == 1:
-                linked[i].post(send_text)
+        for n, platform in enumerate(linked):
+            if self.vars[n].get() == 1:
+                platform.post(send_text)
 
     def show_screen(self):
         "Opens the 'Spread.io' window"
