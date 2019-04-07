@@ -36,6 +36,8 @@ class Display():
                          width=40,
                          command=lambda:[self.login_window(plug), plug.log_in()])
         plat.pack(pady=5)
+        if plug.is_linked:
+            plat['state'] = 'disabled'
 
     def login_window(self, plug):
         self.subwin.destroy()
