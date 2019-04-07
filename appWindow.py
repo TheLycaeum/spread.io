@@ -74,11 +74,19 @@ class Display():
                                   text=plug.name,
                                   variable=var)
             plat.pack(anchor='w')
-
+            
             d_button = self.delink_button(plug)
+            var.trace("w", lambda *args:self.callback())
             self.vars.append(var)
             self.linked_platforms.append(plat)         
             self.linked_platforms.append(d_button)
+
+    def callback(self):
+        list_vars = [i.get() for i in self.vars]
+        if max(list_vars) == 1:
+            self.button['state'] = 'normal'
+        else:
+            self.button['state'] = 'disabled'
 
     def delink_button(self, plug):
         delink_btn = tk.Button(self.win,
@@ -106,11 +114,11 @@ class Display():
 
     def send_button(self,linked):
         "Button for sending content"
-        send_text = self.text_frame.get('1.0', tk.END)
-        button = tk.Button(self.win,
+        self.button = tk.Button(self.win,
                            text="SEND",
                            command=lambda:[self.send(linked)])
-        button.pack(anchor='e', padx=20, pady=20)
+        self.button['state'] = 'disabled'
+        self.button.pack(anchor='e', padx=20, pady=20)
         
     def send(self,linked):
         "Sends the content inside message-box"
@@ -118,14 +126,14 @@ class Display():
         if len(send_text) == 1:
             mb.showinfo("Warning", "Box is empty!")
         else:
-            self.put_post(linked, send_text, self.vars)
+            self.put_post(linked, send_text)
         
 
-    def put_post(self, linked, send_text, vars):
+    def put_post(self, linked, send_text):
         "Posts message to respective linked platforms"
-        for i in range(len(linked)):
-            if vars[i].get() == 1:
-                linked[i].post(send_text)
+        for n, platform in enumerate(linked):
+            if self.vars[n].get() == 1:
+                platform.post(send_text)
 
     def show_screen(self):
         "Opens the 'Spread.io' window"
@@ -133,7 +141,7 @@ class Display():
 
 
 def main():
-    app = Spread()    
+    app = Spread()
     appwin = Display(app)
 
     plugins = app.get_plugins()
