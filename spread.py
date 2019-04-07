@@ -24,7 +24,4 @@ class Spread():
                 linked.append(plug)
         return linked
 
-    def post(self, plugin, message):
-        "Post the message to the respective plugin"
-        for plug in plugins:
-            plugin.post(message)
+
