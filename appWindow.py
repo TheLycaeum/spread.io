@@ -118,7 +118,7 @@ class Display():
         "Button for sending content"
         self.button = tk.Button(self.win,
                            text="SEND",
-                           command=lambda:[self.send(linked), self.text_frame.delete('1.0', tk.END)])
+                            command=lambda:[self.send(linked), self.text_frame.delete('1.0', tk.END)])
         self.button['state'] = 'disabled'
         self.button.pack(anchor='e', padx=20, pady=20)
         
