@@ -16,6 +16,11 @@ class Spread():
         self.plugins.append(Facebook(config_file))
         return self.plugins
 
+    def load_platforms(self):
+        "Loads all platforms"
+        for plug in self.plugins:
+            plug.load()
+    
     def check_linked(self):
         "Checks if plugins are linked"
         linked = []
@@ -23,5 +28,3 @@ class Spread():
             if plug.is_linked:
                 linked.append(plug)
         return linked
-
-
