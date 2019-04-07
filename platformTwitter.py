@@ -9,7 +9,7 @@ class Twitter(Platform):
     def __init__(self, filename):
         self.name = "Twitter"
         self.configfile = filename
-        self.load() # Need to remove
+
 
 
     def load(self):

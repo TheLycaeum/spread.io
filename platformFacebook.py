@@ -11,7 +11,7 @@ class Facebook(Platform):
     def __init__(self, filename):
         self.name = "Facebook"
         self.configfile = filename
-        self.load() # Need to remove
+
 
     def load(self):
         "Loads keys and api"
@@ -120,8 +120,8 @@ class Facebook(Platform):
 
     def post(self, message):
         "Posts the message using api"
-        self.authenticate_page()
         try:
+            self.authenticate_page()
             self.graph.put_object("me", "feed", message=message)
             post_status = True
         except:
