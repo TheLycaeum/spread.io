@@ -3,8 +3,8 @@ consumer_key = Y22pLniUdwNsg5tg7B7UgFlnn
 consumer_secret = P85zJuLD7jBP1eW9EBZMjDbQkdVacljBni5y9gwd0qE5c13bWj
 
 [twitter_user]
-access_token = 1112014959901175808-u77cU9I5dbT3NAhs5EboFKnxlSrtBf
-access_secret = HVsJWNoz0ozEZ9GOhypjpbX4N1URITl4dPNq4U9DgzWMz
+access_token = 3238545176-xypelgyZVPFb7cOUc2rswpmYRt7cnkVdLKn4jhj
+access_secret = KehYRbgTK3FXvFbf0lyeXVU7b2WHFFVVwaeeAhgf0h8i3
 
 [Facebook_client]
 client_id = 1234179660062675
@@ -12,5 +12,6 @@ client_secret = f04ef73cdaf8ecdcbfe536356ef31974
 name = spread
 
 [Facebook_user]
-access_token = XXXXX
+access_token = EAARietg6H9MBAG8yjTeQYZC1uJqQGFvZCpmnQCzrxZBhILZChMRUohQlgZCrtEySOHyZCEyeVnNguZBU42fRZBPZCAjlObC3sIxaQwKLfbljw6Wu4WWZAOd7og3sxSmkBzKgrlg0h2PpADUeovympZAQX12xnEOsrhFjLYZD
 page_name = Test
+
