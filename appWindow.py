@@ -118,7 +118,7 @@ class Display():
         "Button for sending content"
         self.button = tk.Button(self.win,
                            text="SEND",
-                           command=lambda:[self.send(linked)])
+                           command=lambda:[self.send(linked), self.text_frame.delete('1.0', tk.END)])
         self.button['state'] = 'disabled'
         self.button.pack(anchor='e', padx=20, pady=20)
         
@@ -135,7 +135,11 @@ class Display():
         "Posts message to respective linked platforms"
         for n, platform in enumerate(linked):
             if self.vars[n].get() == 1:
-                platform.post(send_text)
+                post_status = platform.post(send_text)
+                if post_status:
+                    mb.showinfo("Message status", " Successfully posted in {}".format(platform.name))
+                else:
+                    mb.showerror("Warning", "{}:Sorry!!Please check your connection".format(platform.name))
 
     def show_screen(self):
         "Opens the 'Spread.io' window"
