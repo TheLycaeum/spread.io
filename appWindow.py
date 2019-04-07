@@ -75,7 +75,7 @@ class Display():
             plat = tk.Checkbutton(self.win,
                                   text=plug.name,
                                   variable=var)
-            plat.pack(anchor='w')
+            plat.pack(anchor='w', side=tk.LEFT)
             
             d_button = self.delink_button(plug)
             var.trace("w", lambda *args:self.callback())
@@ -94,7 +94,7 @@ class Display():
         delink_btn = tk.Button(self.win,
                                text="LOG OUT",
                                command=lambda:[plug.delink(), self.update_platforms()])
-        delink_btn.pack(anchor='e', padx=20)
+        delink_btn.pack(anchor='e', side=tk.LEFT)
         return delink_btn
 
     def update_platforms(self):
