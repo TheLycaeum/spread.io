@@ -148,7 +148,7 @@ class Display():
                 post_status.append((response, platform))
         self.post_response(post_status)
 
-    def post_response(self, post_status)
+    def post_response(self, post_status):
         string = []
         for item in post_status:
             response, platform = item
