@@ -83,5 +83,5 @@ class Twitter(Platform):
             post_status = True
         except:
             post_status = False
-            raise Exception("Was Unable to post, check network connection")
+            #raise Exception("Was Unable to post, check network connection")
         return post_status
