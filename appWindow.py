@@ -94,7 +94,7 @@ class Display():
         delink_btn = tk.Button(self.win,
                                text="LOG OUT",
                                command=lambda:[plug.delink(), self.update_platforms()])
-        delink_btn.pack(anchor='w',side=tk.RIGHT)
+        delink_btn.pack(anchor='w')
         return delink_btn
 
     def update_platforms(self):
