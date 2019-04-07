@@ -97,7 +97,6 @@ class Display():
                                                                  padx=20)
 
 
-
     def callback(self):
         list_vars = [i.get() for i in self.check_vars]
         if max(list_vars) == 1:
@@ -138,17 +137,27 @@ class Display():
             mb.showinfo("Warning", "Box is empty!")
         else:
             self.put_post(linked, send_text)
-        
+
 
     def put_post(self, linked, send_text):
         "Posts message to respective linked platforms"
+        post_status = []
         for n, platform in enumerate(linked):
             if self.check_vars[n].get() == 1:
-                post_status = platform.post(send_text)
-                if post_status:
-                    mb.showinfo("Message status", " Successfully posted in {}".format(platform.name))
-                else:
-                    mb.showerror("Warning", "{}:Sorry!!Please check your connection".format(platform.name))
+                response = platform.post(send_text)
+                post_status.append((response, platform))
+        self.post_response(post_status)
+
+    def post_response(self, post_status)
+        string = []
+        for item in post_status:
+            response, platform = item
+            if response:
+                string.append("Posted in {}\n".format(platform.name))
+            else:
+                string.append("Posting failed in {}\n".format(platform.name))
+        mb.showinfo("Post Status", "".join(string))
+
 
     def show_screen(self):
         "Opens the 'Spread.io' window"
