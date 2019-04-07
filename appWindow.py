@@ -66,39 +66,48 @@ class Display():
         plug.check_link()
         self.update_platforms()
 
+
     def show_platforms(self, linked):
-        "Shows the available platforms"
-        self.vars = []
-        self.linked_platforms = []
+        "Shows the list of logged-in platforms"
+        self.check_vars = []
+        self.list_bar = []
         for plug in linked:
-            var = tk.IntVar()
-            plat = tk.Checkbutton(self.win,
-                                  text=plug.name,
-                                  variable=var)
-            plat.pack(anchor='w', side=tk.TOP, padx=10, pady=0)
+            platform_bar = tk.Frame(self.win)
+            self.check_box(platform_bar, plug)
+            self.delink_button(platform_bar, plug)
+            platform_bar.pack(fill='x')
+            self.list_bar.append(platform_bar)         
+
+    def check_box(self, platform_bar, plug):
+        "Checkbox for logged-in platform"
+        var = tk.IntVar()
+        tk.Checkbutton(platform_bar,
+                       text=plug.name,
+                       variable=var).pack(side='left',
+                                          padx=10)
+        var.trace("w", lambda *args:self.callback())
+        self.check_vars.append(var)
             
-            d_button = self.delink_button(plug)
-            var.trace("w", lambda *args:self.callback())
-            self.vars.append(var)
-            self.linked_platforms.append(plat)         
-            self.linked_platforms.append(d_button)
+    def delink_button(self, platform_bar, plug):
+        "Logout button for logged-in platform"
+        tk.Button(platform_bar,
+                  text="LOG OUT",
+                  command=lambda:[plug.delink(),
+                                  self.update_platforms()]).pack(side='right',
+                                                                 padx=20)
+
+
 
     def callback(self):
-        list_vars = [i.get() for i in self.vars]
+        list_vars = [i.get() for i in self.check_vars]
         if max(list_vars) == 1:
             self.button['state'] = 'normal'
         else:
             self.button['state'] = 'disabled'
 
-    def delink_button(self, plug):
-        delink_btn = tk.Button(self.win,
-                               text="LOG OUT",
-                               command=lambda:[plug.delink(), self.update_platforms()])
-        delink_btn.pack(anchor='w')
-        return delink_btn
 
     def update_platforms(self):
-        for obj in self.linked_platforms:
+        for obj in self.list_bar:
             obj.destroy()
         linked = self.app.check_linked()
         self.show_platforms(linked)
@@ -134,7 +143,7 @@ class Display():
     def put_post(self, linked, send_text):
         "Posts message to respective linked platforms"
         for n, platform in enumerate(linked):
-            if self.vars[n].get() == 1:
+            if self.check_vars[n].get() == 1:
                 post_status = platform.post(send_text)
                 if post_status:
                     mb.showinfo("Message status", " Successfully posted in {}".format(platform.name))
