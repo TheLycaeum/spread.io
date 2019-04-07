@@ -11,7 +11,7 @@ using username and password.
 that you will redirect to your developer page.
 
 4.Then click `Tools` --> `Graph API Explorer` -->
-`Get Token --> `Get useracces Token` at the same time
+`Get Token` --> `Get useracces Token` at the same time
 facebook ask you to the permission about user data.
 
 5.You should select these options from that window :-
