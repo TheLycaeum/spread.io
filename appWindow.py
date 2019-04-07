@@ -76,16 +76,14 @@ class Display():
             plat.pack(anchor='w')
             
             d_button = self.delink_button(plug)
+            var.trace("w", lambda *args:self.callback())
             self.vars.append(var)
             self.linked_platforms.append(plat)         
             self.linked_platforms.append(d_button)
-            var.trace("w", lambda *args:self.callback())
 
     def callback(self):
-        list_vars = []
-        for i in self.vars:
-            list_vars.append(i.get())
-        if list_vars ==[1, 0] or list_vars == [0, 1] or list_vars == [1, 1]:
+        list_vars = [i.get() for i in self.vars]
+        if max(list_vars) == 1:
             self.button['state'] = 'normal'
         else:
             self.button['state'] = 'disabled'
@@ -126,6 +124,7 @@ class Display():
         self.button = tk.Button(self.win,
                            text="SEND",
                            command=lambda:[self.send(linked)])
+        self.button['state'] = 'disabled'
         self.button.pack(anchor='e', padx=20, pady=20)
         
     def send(self,linked):
