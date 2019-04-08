@@ -15,16 +15,11 @@ class Spread():
         self.plugins.append(Twitter(config_file))
         self.plugins.append(Facebook(config_file))
         return self.plugins
-
-    def load_platforms(self):
-        "Loads all platforms"
-        for plug in self.plugins:
-            plug.load()
     
-    def check_linked(self):
+    def check_linked(self, plugins):
         "Checks if plugins are linked"
         linked = []
-        for plug in self.plugins:
+        for plug in plugins:
             if plug.is_linked:
                 linked.append(plug)
         return linked
