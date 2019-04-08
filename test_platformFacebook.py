@@ -5,12 +5,22 @@ from platformFacebook import Facebook
 import facebook as fb
 import configparser
 
-file_name = ".test_config"
+config = configparser.ConfigParser()
+config['Facebook_client'] = {'client_id': '1234179660062675',
+                             'client_secret': 'f04ef73cdaf8ecdcbfe536356ef31974',
+                             'name':'spread'}
+
+config['Facebook_user'] = {'access_token': 'EAARietg6H9MBAG8yjTeQYZC1uJqQGFvZCpmnQCzrxZBhILZChMRUohQlgZCrtEySOHyZCEyeVnNguZBU42fRZBPZCAjlObC3sIxaQwKLfbljw6Wu4WWZAOd7og3sxSmkBzKgrlg0h2PpADUeovympZAQX12xnEOsrhFjLYZD',
+                           'page_name': 'Test'}
+with open('/tmp/.test_config', 'w') as configfile:
+    config.write(configfile)
+    
+file_name = "/tmp/.test_config"
 
 def test_init_value():
     face = Facebook(file_name)
     assert face.name == "Facebook"
-    assert face.configfile == ".test_config"
+    assert face.configfile == "/tmp/.test_config"
 
 def test_load_user_key():
     face = Facebook(file_name)
