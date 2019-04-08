@@ -47,6 +47,7 @@ class Twitter(Platform):
         "Check whether user is linked to twitter account or not"
         try:
             username = self.api.me().name
+            print(username)
             self.is_linked = True
         except:
             self.is_linked = False
