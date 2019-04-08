@@ -20,3 +20,11 @@ def test_load_app_apikey():
     with pytest.raises(Exception, match="You haven't configured the API keys. Please read README file."):
         twet.load_app_apikey()
 
+def test_check_link():
+    twet = Twitter(file_name)
+    twet.check_link()
+    assert twet.is_linked == False
+
+    
+    
+
