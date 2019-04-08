@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 from tkinter import scrolledtext as st
 from tkinter import messagebox as mb
 from spread import Spread
@@ -33,8 +34,12 @@ class Display():
 
         current_load = tk.Label(loadwin,
                                 text="Loading")
-        current_load.pack(anchor='center')
+        current_load.pack(expand='yes')
+        loadbar = ttk.Progressbar(loadwin, length=100, mode="determinate")
+        loadbar.pack(expand='yes')
+
         for plug in plugins:
+            loadbar['value'] += 100/len(plugins)
             current_load.config(text="Loading {}...".format(plug.name))
             current_load.update_idletasks()
             plug.load()
