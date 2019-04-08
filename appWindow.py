@@ -7,11 +7,38 @@ class Display():
     "User-interface for the app using Tkinter"
 
     def __init__(self, app):
+        self.app = app
+        plugins = self.app.get_plugins()
+        self.load_window(plugins)
+
         self.win = tk.Tk()
         self.win.title("Spread.io")
         self.win.geometry("500x400")
         self.win.resizable(0,0)
-        self.app = app
+
+        self.add_button(plugins)
+        linked = app.check_linked(plugins)
+        self.message_box()
+        self.send_button(linked)
+        self.show_platforms(linked)
+        self.show_screen()
+
+
+
+    def load_window(self, plugins):
+        loadwin = tk.Tk()
+        loadwin.title("Spread.io")
+        loadwin.geometry("200x100")
+        loadwin.resizable(0,0)
+
+        current_load = tk.Label(loadwin,
+                                text="Loading")
+        current_load.pack(anchor='center')
+        for plug in plugins:
+            current_load.config(text="Loading {}...".format(plug.name))
+            current_load.update_idletasks()
+            plug.load()
+        loadwin.destroy()
 
 
     def add_button(self, plug_ins):
@@ -169,22 +196,8 @@ class Display():
         self.win.mainloop()
 
 
-def main():
-    app = Spread()
-    appwin = Display(app)
-
-    plugins = app.get_plugins()
-    app.load_platforms()
-    appwin.add_button(plugins)
-
-    linked = app.check_linked()
-    appwin.message_box()
-    appwin.send_button(linked)
-
-    appwin.show_platforms(linked)
-
-    appwin.show_screen()
 
 
 if __name__ == '__main__':
-    main()
+    app = Spread()
+    appwin = Display(app)
