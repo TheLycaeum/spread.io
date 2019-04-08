@@ -9,7 +9,6 @@ class Display():
 
     def __init__(self, app):
         self.app = app
-        self.plugins = self.app.get_plugins()
         self.load_window()
 
         self.win = tk.Tk()
@@ -39,8 +38,8 @@ class Display():
         loadbar = ttk.Progressbar(loadwin, length=100, mode="determinate")
         loadbar.pack(expand='yes')
 
-        for plug in self.plugins:
-            loadbar['value'] += 100/len(self.plugins)
+        for plug in self.app.plugins:
+            loadbar['value'] += 100/len(self.app.plugins)
             current_load.config(text="Loading {}...".format(plug.name))
             current_load.update_idletasks()
             plug.load()
@@ -58,9 +57,9 @@ class Display():
         "Window to link more platforms"
         addwin = tk.Tk()
         addwin.title("Add platforms")
-        addwin.geometry("300x{}".format(50*len(self.plugins)))
+        addwin.geometry("300x{}".format(50*len(self.app.plugins)))
         addwin.resizable(0, 0)
-        for plug in self.plugins:
+        for plug in self.app.plugins:
             self.create_button(addwin, plug)
 
     def create_button(self, addwin, plug):
