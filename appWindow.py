@@ -9,28 +9,29 @@ class Display():
 
     def __init__(self, app):
         self.app = app
-        plugins = self.app.get_plugins()
-        self.load_window(plugins)
+        self.plugins = self.app.get_plugins()
+        self.load_window()
 
         self.win = tk.Tk()
         self.win.title("Spread.io")
         self.win.geometry("500x400")
-        self.win.resizable(0,0)
+        self.win.resizable(0, 0)
 
-        self.add_button(plugins)
-        linked = app.check_linked(plugins)
-        self.message_box()
+        self.add_button()
+        linked = app.check_linked()
+        self.text_box()
         self.send_button(linked)
-        self.show_platforms(linked)
+        self.show_platform_list(linked)
         self.show_screen()
 
 
 
-    def load_window(self, plugins):
+    def load_window(self):
+        "Loading window, shows which platform is loading before opening"
         loadwin = tk.Tk()
         loadwin.title("Spread.io")
         loadwin.geometry("200x100")
-        loadwin.resizable(0,0)
+        loadwin.resizable(0, 0)
 
         current_load = tk.Label(loadwin,
                                 text="Loading")
@@ -38,68 +39,81 @@ class Display():
         loadbar = ttk.Progressbar(loadwin, length=100, mode="determinate")
         loadbar.pack(expand='yes')
 
-        for plug in plugins:
-            loadbar['value'] += 100/len(plugins)
+        for plug in self.plugins:
+            loadbar['value'] += 100/len(self.plugins)
             current_load.config(text="Loading {}...".format(plug.name))
             current_load.update_idletasks()
             plug.load()
         loadwin.destroy()
 
 
-    def add_button(self, plug_ins):
-        plus = tk.Button(self.win,
-                         text="+",
-                         width=20,
-                         command=lambda:self.add_window(plug_ins))
-        plus.pack()
+    def add_button(self):
+        "Button to open add_window"
+        tk.Button(self.win,
+                  text="+",
+                  width=20,
+                  command=self.add_window).pack()
 
-    def add_window(self, plug_ins):
-        subwin = tk.Tk()
-        self.subwin = subwin
-        self.subwin.title("Add platforms")
-        self.subwin.geometry("300x{}".format(50*len(plug_ins)))
-        self.subwin.resizable(0,0)
-        for plug in plug_ins:
-            self.create_button(plug)
+    def add_window(self):
+        "Window to link more platforms"
+        addwin = tk.Tk()
+        addwin.title("Add platforms")
+        addwin.geometry("300x{}".format(50*len(self.plugins)))
+        addwin.resizable(0, 0)
+        for plug in self.plugins:
+            self.create_button(addwin, plug)
 
-    def create_button(self, plug):
-        plat = tk.Button(self.subwin,
-                         text=plug.name,
-                         width=40,
-                         command=lambda:[self.login_window(plug), plug.log_in()])
-        plat.pack(pady=5)
+    def create_button(self, addwin, plug):
+        "Creates platform_buttons"
+        platform_button = tk.Button(addwin,
+                                    text=plug.name,
+                                    width=40,
+                                    command=lambda: [self.login_window(plug),
+                                                     plug.log_in(),
+                                                     addwin.destroy()])
+        platform_button.pack(pady=5)
         if plug.is_linked:
-            plat['state'] = 'disabled'
+            platform_button['state'] = 'disabled'
+
 
     def login_window(self, plug):
-        self.subwin.destroy()
-        popwin = tk.Tk()
-        popwin.title("Login to {}".format(plug.name))
-        popwin.geometry("300x100")
-        popwin.resizable(0,0)
+        "Window to link respective platform"
+        logwin = tk.Tk()
+        logwin.title("Login to {}".format(plug.name))
+        logwin.geometry("300x100")
+        logwin.resizable(0, 0)
 
-        tk.Label(popwin,
-                 text="Enter Pin",
+        tk.Label(logwin,
+                 text="Enter the verifier",
                  width=15).pack()
-        self.checkpoint = tk.Entry(popwin, width=25)
-        self.checkpoint.pack()
-        login_btn = tk.Button(popwin,
-                              text="ADD",
-                              command=lambda:[self.send_pin(plug), popwin.destroy()])
-        login_btn.pack()
+
+        self.verifier = tk.Entry(logwin, width=25)
+        self.verifier.pack()
+
+        tk.Button(logwin,
+                  text="ADD",
+                  command=lambda: [self.authentication(plug),
+                                   logwin.destroy()]).pack()
 
 
-    def send_pin(self, plug):
-        "Sends authentication verifier to respective platforms"
-        add_pin = self.checkpoint.get()
-        self.checkpoint.destroy()
-        plug.write_user_keys(add_pin)
+    def authentication(self, plug):
+        "Sends the verifier to respective platforms to authenticate"
+        string = self.verifier.get()
+        self.verifier.destroy()
+        plug.write_user_keys(string)
         plug.load()
-        plug.check_link()
-        self.update_platforms()
+        self.update_platform_list()
 
 
-    def show_platforms(self, linked):
+    def update_platform_list(self):
+        "Updates the list of logged-in platforms"
+        for obj in self.list_bar:
+            obj.destroy()
+        linked = self.app.check_linked()
+        self.show_platform_list(linked)
+
+
+    def show_platform_list(self, linked):
         "Shows the list of logged-in platforms"
         self.check_vars = []
         self.list_bar = []
@@ -107,8 +121,9 @@ class Display():
             platform_bar = tk.Frame(self.win)
             self.check_box(platform_bar, plug)
             self.delink_button(platform_bar, plug)
+
             platform_bar.pack(fill='x')
-            self.list_bar.append(platform_bar)         
+            self.list_bar.append(platform_bar)
 
     def check_box(self, platform_bar, plug):
         "Checkbox for logged-in platform"
@@ -117,19 +132,19 @@ class Display():
                        text=plug.name,
                        variable=var).pack(side='left',
                                           padx=10)
-        var.trace("w", lambda *args:self.callback())
+        var.trace("w", lambda *args: self.callback())
         self.check_vars.append(var)
-            
+
     def delink_button(self, platform_bar, plug):
         "Logout button for logged-in platform"
         tk.Button(platform_bar,
                   text="LOG OUT",
-                  command=lambda:[plug.delink(),
-                                  self.update_platforms()]).pack(side='right',
-                                                                 padx=20)
-
+                  command=lambda: [plug.delink(),
+                                   self.update_platform_list()]).pack(side='right',
+                                                                      padx=20)
 
     def callback(self):
+        "Disables send-button if none of platforms are selected"
         list_vars = [i.get() for i in self.check_vars]
         if max(list_vars) == 1:
             self.button['state'] = 'normal'
@@ -137,33 +152,27 @@ class Display():
             self.button['state'] = 'disabled'
 
 
-    def update_platforms(self):
-        for obj in self.list_bar:
-            obj.destroy()
-        linked = self.app.check_linked()
-        self.show_platforms(linked)
+    def text_box(self):
+        "Creates a text-box to type the message/content"
+        tk.Label(self.win,
+                 text="Message box").pack(anchor='center')
 
-    def message_box(self):
-        "Creates a message-box to type the message/content"
-        message = tk.Label(self.win,
-                           text="Message box")
-        message.pack(anchor='center')
         self.text_frame = st.ScrolledText(self.win,
                                           width=55,
                                           height=10)
         self.text_frame.pack(anchor='center')
 
 
-    def send_button(self,linked):
+    def send_button(self, linked):
         "Button for sending content"
         self.button = tk.Button(self.win,
-                           text="SEND",
-                            command=lambda:self.send(linked))
-        self.button['state'] = 'disabled'
+                                text="SEND",
+                                command=lambda: self.send(linked))
         self.button.pack(anchor='e', padx=20, pady=20)
-        
-    def send(self,linked):
-        "Sends the content inside message-box"
+        self.button['state'] = 'disabled'
+
+    def send(self, linked):
+        "Sends the content inside text-box"
         send_text = self.text_frame.get('1.0', tk.END)
         if len(send_text) == 1:
             mb.showinfo("Warning", "Box is empty!")
@@ -181,6 +190,7 @@ class Display():
         self.post_response(post_status)
 
     def post_response(self, post_status):
+        "Shows message box as post response"
         string = []
         clear_text = True
         for item in post_status:
@@ -190,6 +200,7 @@ class Display():
             else:
                 clear_text = False
                 string.append("Posting failed in {}\n".format(platform.name))
+
         if clear_text:
             mb.showinfo("Post Status", "".join(string))
             self.text_frame.delete('1.0', tk.END)
@@ -199,7 +210,6 @@ class Display():
     def show_screen(self):
         "Opens the 'Spread.io' window""successful "
         self.win.mainloop()
-
 
 
 
