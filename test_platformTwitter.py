@@ -44,5 +44,14 @@ def test_check_link_fail():
     with open (file_name,'w') as config_file:
         reset.write(config_file)
     
-    
+def test_delink():
+    twet = Twitter(file_name)
+    reset = configparser.ConfigParser()
+    reset.read(file_name)
+    reset['twitter_app']['consumer_key'] = 'XXXXX'
+    reset['twitter_app']['consumer_secret'] = 'XXXXX'
+    with open (file_name,'w') as config_file:
+        reset.write(config_file)
+    twet.check_link()
+    assert twet.is_linked == False
 
