@@ -13,7 +13,7 @@ class Facebook(Platform):
         self.configfile = filename
 
 
-    def load(self):
+    def load(self): # pragma: no cover
         "Loads keys and api"
         self.load_app_apikey()
         access_token = self.load_user_key()
@@ -56,7 +56,7 @@ class Facebook(Platform):
             self.is_linked = False
 
 
-    def log_in(self):
+    def log_in(self):# pragma: no cover
         "Open the facebook in browser to authorize the app"
         params = {'scope': 'publish_pages',
                   'response_type': 'token',
@@ -64,7 +64,7 @@ class Facebook(Platform):
         url = self.service.get_authorize_url(**params)
         webbrowser.open(url)
 
-    def write_user_keys(self, verifier):
+    def write_user_keys(self, verifier):# pragma: no cover
         "Writes the access_token to .config file"
         access_token = self.get_token_from_url(verifier)
         exd_token = self.extend_token(access_token)
@@ -80,7 +80,7 @@ class Facebook(Platform):
         splitter = url.split('=')[1].split('&')[0]
         return splitter
 
-    def extend_token(self, access_token):
+    def extend_token(self, access_token):# pragma: no cover
         "Extend the expiration time of a valid OAuth access token."
         keys = configparser.ConfigParser()
         keys.read(self.configfile)
