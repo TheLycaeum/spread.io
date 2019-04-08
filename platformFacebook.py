@@ -64,9 +64,9 @@ class Facebook(Platform):
         url = self.service.get_authorize_url(**params)
         webbrowser.open(url)
 
-    def write_user_keys(self, url):
+    def write_user_keys(self, verifier):
         "Writes the access_token to .config file"
-        access_token = self.get_token_from_url(url)
+        access_token = self.get_token_from_url(verifier)
         exd_token = self.extend_token(access_token)
 
         config = configparser.ConfigParser()
@@ -91,6 +91,7 @@ class Facebook(Platform):
         exd_token = graph.extend_access_token(client_id,
                                               client_secret)
         return exd_token
+
 
     def delink(self):
         "Delinks the platform"

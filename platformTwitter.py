@@ -6,10 +6,10 @@ from platforms import Platform
 
 class Twitter(Platform):
     "Platform for twitter"
+
     def __init__(self, filename):
         self.name = "Twitter"
         self.configfile = filename
-
 
 
     def load(self):
@@ -30,7 +30,7 @@ class Twitter(Platform):
             raise Exception("You haven't configured the API keys. Please read README file.")
         else:
             self.service = tweepy.OAuthHandler(consumer_key,
-                                              consumer_secret)
+                                               consumer_secret)
 
     def load_user_key(self):
         "Loads user access token"
@@ -40,7 +40,7 @@ class Twitter(Platform):
         access_secret = config['twitter_user']['access_secret']
 
         self.service.set_access_token(access_token,
-                                     access_secret)
+                                      access_secret)
         self.url = self.service.get_authorization_url()
 
     def check_link(self):
@@ -56,15 +56,16 @@ class Twitter(Platform):
         "Open the twitter in browser to authorize the app"
         webbrowser.open(self.url)
 
-    def write_user_keys(self, pin):
-        "Get access tokens using the PIN generated in browser"
-        keys = self.service.get_access_token(pin)
+    def write_user_keys(self, verifier):
+        "Get access tokens using the verifier-PIN generated in browser"
+        keys = self.service.get_access_token(verifier)
         config = configparser.ConfigParser()
         config.read(self.configfile)
         config['twitter_user']['access_token'] = keys[0]
         config['twitter_user']['access_secret'] = keys[1]
         with open(self.configfile, 'w') as files:
             config.write(files)
+
 
     def delink(self):
         "Delink a user by removing config keys"
@@ -75,6 +76,7 @@ class Twitter(Platform):
         with open(self.configfile, 'w') as files:
             config.write(files)
         self.is_linked = False
+
 
     def post(self, message):
         "Posts the tweet using api"
