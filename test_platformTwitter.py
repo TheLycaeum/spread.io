@@ -46,12 +46,25 @@ def test_check_link_fail():
     
 def test_delink():
     twet = Twitter(file_name)
-    reset = configparser.ConfigParser()
-    reset.read(file_name)
-    reset['twitter_app']['consumer_key'] = 'XXXXX'
-    reset['twitter_app']['consumer_secret'] = 'XXXXX'
-    with open (file_name,'w') as config_file:
-        reset.write(config_file)
-    twet.check_link()
+    config = configparser.ConfigParser()
+    config.read(file_name)
+    config['twitter_app']['consumer_key'] = 'Y22pLniUdwNsg5tg7B7UgFlnn'
+    config['twitter_app']['consumer_secret'] = 'P85zJuLD7jBP1eW9EBZMjDbQkdVacljBni5y9gwd0qE5c13bWj'
+    with open (file_name, 'w') as configfile:
+        config.write(configfile)
+    twet.load()
+    twet.delink()
     assert twet.is_linked == False
+    check = configparser.ConfigParser()
+    check.read(file_name)
+    assert check['twitter_user']['access_token'] =='XXXXX'
+    assert check['twitter_user']['access_secret'] =='XXXXX'
+    check['twitter_app']['consumer_key'] = 'XXXXX'
+    check['twitter_app']['consumer_secret'] = 'XXXXX'
+    check['twitter_user']['access_token']='3238545176-xypelgyZVPFb7cOUc2rswpmYRt7cnkVdLKn4jhj'
+    check['twitter_user']['access_secret']='KehYRbgTK3FXvFbf0lyeXVU7b2WHFFVVwaeeAhgf0h8i3'
+    with open (file_name, 'w') as config_file:
+        check.write(config_file)
+        
+    
 
