@@ -54,4 +54,36 @@ grant permission to the eairlier specified page.
 16. Type you mesage on the message box, select `Facebook` from checkbox
 and Press Send to send the message.
 
+
+-----------Steps to get started on Twitter --------------
+
+How to set up twitter for tweeting through spread.io
+Step 1
+Go to Twitter developer https://developer.twitter.com
+Set up a new app
+Go to: Twitter Apps -> Create New App -> Leave Callback URL empty -> Create your Twitter application.
+You should see "Your application has been created. Please take a
+moment to review and adjust your application's settings".
+Step 2
+By default, app's access level is read-only. To send out tweets, it requires write permission.
+Go to: Permissions tab -> What type of access does your application
+need? -> Choose Read and Write -> Update settings.  You should see
+"The permission settings have been successfully updated. It may take a
+moment for the changes to reflect."
+Step 3
+Go to: Twitter Apps -> select your app  -> Dashboard ->.Keys and Tockens
+From this page, note down the Consumer Key (API Key), Consumer Secret
+(API Secret). Consumer Key/Secret help twitter identify the app and
+Access Token/Secret help twitter identify the user (that is you).
+Paste Consumer Key,  Consumer Secret in the fields given in .config file.
+Let¡¯s tweet now:
+Open appWindow.py click on `+` --> `TWITTER`.
+If you are at first time. You got a webpage and request to login twitter.
+After login click on button Authorised  and copy the Authorised pin  
+Past the pin in `Enter Pin` field and click ADD.
+Type you message on the message box, select `Twitter` from checkbox
+and Press Send to send the message.
+
 -------------------Thank You------------------------------
+
+
