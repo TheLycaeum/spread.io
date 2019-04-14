@@ -20,30 +20,35 @@ class Facebook(Platform):
         self.graph = fb.GraphAPI(access_token)
         self.check_link()
 
+    def read_config(self):
+        config_dict = dict()
+        config = configparser.ConfigParser()
+        config.read(self.configfile)
+        config_dict.update({"app_name" :config['Facebook_client']['name']})
+        config_dict.update({"client_id" : config['Facebook_client']['client_id']})
+        config_dict.update({"client_secret" : config['Facebook_client']['client_secret']})
+        config_dict.update({"access_token": config['Facebook_user']['access_token']})
+        config_dict.update({"page_name": config['Facebook_user']['page_name']})
+        return config_dict
+
     def load_app_apikey(self):
         "Loads app api key"
-        keys = configparser.ConfigParser()
-        keys.read(self.configfile)
-        app_name = keys['Facebook_client']['name']
-        client_id = keys['Facebook_client']['client_id']
-        client_secret = keys['Facebook_client']['client_secret']
-
+        config_dict = self.read_config()
         #? Do we need to check page_name here?
-        if app_name == 'XXXXX' or client_id == 'XXXXX' or client_secret == 'XXXXX':
+        if config_dict['app_name'] == 'XXXXX' or config_dict['client_id'] == 'XXXXX' or config_dict['client_secret'] == 'XXXXX':
             raise Exception("You haven't configured the API keys. Please read README file.")
         else:
-            self.service = OAuth2Service(name=app_name,
-                                         client_id=client_id,
-                                         client_secret=client_secret,
+            self.service = OAuth2Service(name=config_dict['app_name'],
+                                         client_id=config_dict['client_id'],
+                                         client_secret=config_dict['client_secret'],
                                          access_token_url='https://graph.facebook.com/oauth/access_token',
                                          authorize_url='https://graph.facebook.com/oauth/authorize',
                                          base_url='https://graph.facebook.com/')
 
     def load_user_key(self):
         "Loads user access token"
-        keys = configparser.ConfigParser()
-        keys.read(self.configfile)
-        access_token = keys['Facebook_user']['access_token']
+        config_dict = self.read_config()
+        access_token = config_dict['access_token']
         return access_token
 
     def check_link(self):
@@ -82,10 +87,9 @@ class Facebook(Platform):
 
     def extend_token(self, access_token):# pragma: no cover
         "Extend the expiration time of a valid OAuth access token."
-        keys = configparser.ConfigParser()
-        keys.read(self.configfile)
-        client_id = keys['Facebook_client']['client_id']
-        client_secret = keys['Facebook_client']['client_secret']
+        keys = self.read_config()
+        client_id = keys['client_id']
+        client_secret = keys['client_secret']
 
         graph = fb.GraphAPI(access_token)
         exd_token = graph.extend_access_token(client_id,
@@ -106,11 +110,8 @@ class Facebook(Platform):
     def authenticate_page(self):
         "Checks the Page is authentic"
         response = self.graph.get_object('me/accounts')
-
-        keys = configparser.ConfigParser()
-        keys.read(self.configfile)
-        page_name = keys['Facebook_user']['page_name']
-
+        config_dict = self.read_config()
+        page_name = config_dict['page_name']
         for page in response['data']:
 	#finding if the page is granted permission and obtaining its page_token
             if page['name'] == page_name:
